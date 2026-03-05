@@ -1,0 +1,102 @@
+:root {
+  interpolate-size: allow-keywords;
+  --theme-transition-duration: 280ms;
+  --theme-transition-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --theme-transition: color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-image var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+
+  --app-text-light: #0f172a;
+  --app-text-dark: #e6edf8;
+  --app-bg-light: #f4f7fc;
+  --app-bg-dark: #090e1a;
+  --app-surface-light: #ffffff;
+  --app-surface-dark: #111a2d;
+  --app-border-light: #d4deef;
+  --app-border-dark: #2d3a55;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  background: light-dark(var(--app-bg-light), var(--app-bg-dark));
+  font-family: var(--font-geist-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-autospace: normal;
+  text-box: trim-both cap alphabetic;
+  transition: var(--theme-transition);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--theme-transition);
+}
+
+img {
+  vertical-align: top;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: var(--theme-transition-easing);
+}
+
+::view-transition-old(root) {
+  animation-name: appPageFadeOut;
+}
+
+::view-transition-new(root) {
+  animation-name: appPageFadeIn;
+}
+
+@keyframes appPageFadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes appPageFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 1ms;
+  }
+}

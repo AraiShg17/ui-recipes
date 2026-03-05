@@ -1,0 +1,89 @@
+.gradientOklabComparison {
+  --gradient-item-bg-light: #ffffff;
+  --gradient-item-bg-dark: #111a2d;
+  --gradient-item-border-light: #e3e9f4;
+  --gradient-item-border-dark: #314566;
+  --gradient-title-light: #34415f;
+  --gradient-title-dark: #bdd0f6;
+  --gradient-bar-border-light: #d6dff0;
+  --gradient-bar-border-dark: #36507a;
+  --gradient-bar-shadow-light: color-mix(in oklab, #111827 8%, transparent);
+  --gradient-bar-shadow-dark: color-mix(in oklab, #000000 28%, transparent);
+
+  --gradient-start: #0057ff;
+  --gradient-end: #ff3b30;
+
+  display: grid;
+  gap: 14px;
+}
+
+.gradientOklabComparisonItem {
+  display: grid;
+  gap: 4px;
+}
+
+.gradientOklabComparisonTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: light-dark(var(--gradient-title-light), var(--gradient-title-dark));
+  font-weight: 700;
+}
+
+.gradientOklabComparisonBarSrgb,
+.gradientOklabComparisonBarSrgbLinear,
+.gradientOklabComparisonBarLab,
+.gradientOklabComparisonBarOklab,
+.gradientOklabComparisonBarOklch {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.gradientOklabComparisonBarSrgb {
+  background-image: linear-gradient(
+    in srgb to right,
+    var(--gradient-start) 0%,
+    var(--gradient-end) 100%
+  );
+}
+
+.gradientOklabComparisonBarSrgbLinear {
+  background-image: linear-gradient(
+    in srgb-linear to right,
+    var(--gradient-start) 0%,
+    var(--gradient-end) 100%
+  );
+}
+
+.gradientOklabComparisonBarLab {
+  background-image: linear-gradient(
+    in lab to right,
+    var(--gradient-start) 0%,
+    var(--gradient-end) 100%
+  );
+}
+
+.gradientOklabComparisonBarOklab {
+  background-image: linear-gradient(
+    in oklab to right,
+    var(--gradient-start) 0%,
+    var(--gradient-end) 100%
+  );
+}
+
+.gradientOklabComparisonBarOklch {
+  background-image: linear-gradient(
+    in oklch to right,
+    var(--gradient-start) 0%,
+    var(--gradient-end) 100%
+  );
+}
+
+@media (max-width: 640px) {
+  .gradientOklabComparisonBarSrgb,
+  .gradientOklabComparisonBarSrgbLinear,
+  .gradientOklabComparisonBarLab,
+  .gradientOklabComparisonBarOklab,
+  .gradientOklabComparisonBarOklch {
+    height: 60px;
+  }
+}

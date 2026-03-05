@@ -1,0 +1,43 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--app-bg-light, #f4f7fc);
+  transition: opacity var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.overlay.fadeOut {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .overlay {
+    background-color: var(--app-bg-dark, #090e1a);
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--app-border-light, #d4deef);
+  border-top-color: var(--app-text-light, #0f172a);
+  border-radius: 50%;
+  animation: themeLoadingSpin 0.8s linear infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .spinner {
+    border-color: var(--app-border-dark, #2d3a55);
+    border-top-color: var(--app-text-dark, #e6edf8);
+  }
+}
+
+@keyframes themeLoadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
