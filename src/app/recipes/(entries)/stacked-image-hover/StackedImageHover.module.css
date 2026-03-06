@@ -1,0 +1,43 @@
+.stackRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-inline: auto;
+  align-items: center;
+}
+
+.stack {
+  --radius: 16px;
+  display: grid;
+  inline-size: 100%;
+  max-inline-size: min(100%, 4rem);
+}
+
+.stack > img {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: var(--radius);
+}
+
+.stack > img:first-child {
+  filter: grayscale(1) brightness(0.9);
+}
+
+.stack > img:last-child {
+  transition: clip-path 1s cubic-bezier(0.19, 1, 0.22, 1);
+  clip-path: circle(0 at 50% 50%);
+}
+
+.stack:hover > img:last-child {
+  clip-path: circle(150% at 50% 50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack > img:last-child {
+    transition: none;
+  }
+}
