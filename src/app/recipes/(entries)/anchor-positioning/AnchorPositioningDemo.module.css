@@ -1,0 +1,286 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 120px;
+}
+
+.anchorBtn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.anchorBtn:hover {
+  background: light-dark(#eef2f7, #1a2332);
+}
+
+.tooltip {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: light-dark(#1e293b, #e2e8f0);
+  color: light-dark(#f8fafc, #0f172a);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.anchorBtn:hover + .tooltip,
+.anchorBtn:focus-visible + .tooltip {
+  opacity: 1;
+}
+
+@supports (anchor-name: --test) {
+  .tooltip {
+    position: fixed;
+    position-anchor: --btn-anchor;
+    inset: unset;
+    bottom: calc(anchor(top) + 8px);
+    left: anchor(center);
+    translate: -50% 0;
+  }
+}
+
+@supports not (anchor-name: --test) {
+  .tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    translate: -50% 0;
+  }
+}
+
+/* ---- 2. アイコン → 右にメニュー ---- */
+.menuWrap {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 120px;
+}
+
+.menuTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.menuTrigger:hover {
+  background: light-dark(#eef2f7, #1a2332);
+}
+
+.menuTriggerIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* popover 要素本体はレイアウトを付けず、wrap に任せる（Popover API と干渉しない） */
+.menu {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+/* 表示・非表示のアニメーション（:popover-open + @starting-style） */
+.menu[popover] {
+  opacity: 0;
+  scale: 0.96;
+  transform-origin: left top;
+  transition:
+    opacity 0.2s ease,
+    scale 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    overlay 0.2s ease allow-discrete,
+    display 0.2s ease allow-discrete;
+}
+
+.menu[popover]:popover-open {
+  opacity: 1;
+  scale: 1;
+}
+
+@starting-style {
+  .menu[popover]:popover-open {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu[popover],
+  .menu[popover]:popover-open {
+    transition: none;
+  }
+}
+
+@supports (anchor-name: --test) {
+  .menu {
+    position: fixed;
+    position-anchor: --menu-anchor;
+    inset: unset;
+    top: anchor(top);
+    left: calc(anchor(right) + 8px);
+  }
+}
+
+@supports not (anchor-name: --test) {
+  .menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-inline-start: 8px;
+    translate: 0 0;
+  }
+}
+
+.menuInner {
+  min-width: 160px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  text-align: start;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.menuItem:hover {
+  background: light-dark(#eef2f7, #1a2332);
+}
+
+/* ---- 3. スライドする背景（anchor-scope + position-anchor） ---- */
+.toggleScope {
+  position: relative;
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  isolation: isolate;
+  anchor-scope: --toggle-active;
+  width: max-content;
+  max-width: 100%;
+}
+
+.toggleIndicator {
+  position: absolute;
+  z-index: 0;
+  border-radius: 999px;
+  background: light-dark(
+    color-mix(in oklab, #1e3a8a 18%, transparent),
+    color-mix(in oklab, #5b7cbf 22%, transparent)
+  );
+  transition:
+    inset-inline-start 0.28s var(--theme-transition-easing),
+    inline-size 0.28s var(--theme-transition-easing);
+}
+
+@supports (anchor-name: --test) {
+  .toggleIndicator {
+    position-anchor: --toggle-active;
+    inset-block-start: anchor(top);
+    inset-inline-start: anchor(left);
+    inline-size: anchor-size(width);
+    block-size: anchor-size(height);
+  }
+}
+
+@supports not (anchor-name: --test) {
+  .toggleIndicator {
+    display: none;
+  }
+}
+
+.toggleOption {
+  position: relative;
+  z-index: 1;
+}
+
+.toggleOption:has(.toggleInput:checked) {
+  anchor-name: --toggle-active;
+}
+
+.toggleInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(100%);
+  border: 0;
+}
+
+.toggleLabel {
+  display: block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: inherit;
+  transition: var(--theme-transition);
+}
+
+.toggleOption:hover .toggleLabel {
+  background: light-dark(
+    color-mix(in oklab, #1e3a8a 8%, transparent),
+    color-mix(in oklab, #8cb0ff 12%, transparent)
+  );
+}
+
+.toggleInput:checked + .toggleLabel {
+  color: #fff;
+}
+
+@supports not (anchor-name: --test) {
+  .toggleInput:checked + .toggleLabel {
+    background: light-dark(#1e3a8a, #243a6b);
+    color: #fff;
+  }
+}
