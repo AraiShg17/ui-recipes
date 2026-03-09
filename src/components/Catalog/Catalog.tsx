@@ -10,7 +10,7 @@ type CatalogProps = {
   items: RecipeIndexItem[];
 };
 
-const DEFAULT_TAGS = ["all", "a11y", "css"];
+const DEFAULT_TAGS = ["all", "a11y", "css", "UI"];
 
 export function Catalog({ items }: CatalogProps) {
   const [query, setQuery] = useState("");
