@@ -230,6 +230,28 @@ img {
 
 ## 🎨 色設定ルール（必須）
 
+### このプロジェクトのCSS変数命名（globals.css）
+
+テーマ別の色は **`--app-{役割}-{light|dark}`** で定義する。
+
+| 変数 | 用途 |
+|------|------|
+| `--app-text-light` / `--app-text-dark` | 本文・ラベル |
+| `--app-bg-light` / `--app-bg-dark` | ページ背景 |
+| `--app-surface-light` / `--app-surface-dark` | カード・パネル・ボタン背景 |
+| `--app-border-light` / `--app-border-dark` | 枠線 |
+
+使用例: `color: light-dark(var(--app-text-light), var(--app-text-dark));`、`background: light-dark(var(--app-surface-light), var(--app-surface-dark));`
+
+### システムカラー（Canvas / CanvasText）について
+
+**Canvas** と **CanvasText** は CSS の**システムカラー**（仕様で決まったキーワード）であり、このリポジトリの CSS 変数ではない。
+
+- **Canvas**: ユーザー環境の「描画面」の背景色（ライト/ダークや Forced Colors Mode に合わせてブラウザが解釈する）
+- **CanvasText**: その上に描かれるテキストの既定色
+
+アクセシビリティや Forced Colors Mode を意識する場合はシステムカラーを使うとよい。このプロジェクトでは通常、**`--app-*` と `light-dark()` の組み合わせ**でテーマを揃える。
+
 ### 基本原則
 
 **すべての色設定はCSS変数を使用し、#000000形式（6桁のHEX）で定義すること。**
