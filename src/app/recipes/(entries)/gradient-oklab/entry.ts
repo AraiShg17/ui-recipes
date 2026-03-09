@@ -9,50 +9,8 @@ const entry: RecipeEntry = {
   tags: ["css"],
   category: "CSS Styling",
   thumbnailSrc: gradientOklabImage.src,
-  code: `.comparison {
-  --gradient-start: #0057ff;
-  --gradient-end: #ff3b30;
-}
-
-.barSrgb {
-  background-image: linear-gradient(
-    in srgb to right,
-    var(--gradient-start) 0%,
-    var(--gradient-end) 100%
-  );
-}
-
-.barSrgbLinear {
-  background-image: linear-gradient(
-    in srgb-linear to right,
-    var(--gradient-start) 0%,
-    var(--gradient-end) 100%
-  );
-}
-
-.barLab {
-  background-image: linear-gradient(
-    in lab to right,
-    var(--gradient-start) 0%,
-    var(--gradient-end) 100%
-  );
-}
-
-.barOklab {
-  background-image: linear-gradient(
-    in oklab to right,
-    var(--gradient-start) 0%,
-    var(--gradient-end) 100%
-  );
-}
-
-.barOklch {
-  background-image: linear-gradient(
-    in oklch to right,
-    var(--gradient-start) 0%,
-    var(--gradient-end) 100%
-  );
-}`,
+  /* 表示用コードは page で .module.css を readFileSync して渡している */
+  code: "",
 };
 
 export default entry;
