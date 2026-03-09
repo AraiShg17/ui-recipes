@@ -1,11 +1,11 @@
 import { getPrevNextHrefs } from "@/app/recipes/entries";
 import { DetailLayout } from "@/components/DetailLayout/DetailLayout";
-import { HeightAutoAnimationDemo } from "./HeightAutoAnimationDemo";
+import { CalcSizeAnimationDemo } from "./CalcSizeAnimationDemo";
 import entry from "./entry";
 
-const SLUG = "height-auto-animation";
+const SLUG = "calc-size-animation";
 
-export default async function HeightAutoAnimationPage() {
+export default async function CalcSizeAnimationPage() {
   const { prevHref, nextHref } = await getPrevNextHrefs(SLUG);
 
   return (
@@ -15,7 +15,7 @@ export default async function HeightAutoAnimationPage() {
       prevHref={prevHref}
       nextHref={nextHref}
     >
-      <HeightAutoAnimationDemo />
+      <CalcSizeAnimationDemo />
     </DetailLayout>
   );
 }

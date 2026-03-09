@@ -1,0 +1,95 @@
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+/* ---- "もっと見る"（実務寄り） ---- */
+.readMoreCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.readMoreContent {
+  width: min(720px, 100%);
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.readMoreText {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: inherit;
+}
+
+/* 下に行くほど白グラデで読めなくなる */
+.readMoreContent::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 56px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, Canvas 0%, transparent),
+    color-mix(in oklab, Canvas 90%, transparent)
+  );
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.readMoreCard[data-expanded] .readMoreContent {
+  height: calc-size(auto, size);
+}
+
+.readMoreCard[data-expanded] .readMoreContent::after {
+  opacity: 0;
+}
+
+/* ボタンが本文に被る（collapsed）、展開後は下に移動 */
+.moreButton {
+  margin-top: -22px;
+  z-index: 1;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(#ffffff, #0b1220);
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, margin-top 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+
+.moreButton:hover {
+  background: light-dark(#eef2f7, #1a2332);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.readMoreCard[data-expanded] .moreButton {
+  margin-top: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .readMoreContent,
+  .readMoreContent::after,
+  .moreButton {
+    transition: none;
+  }
+}
