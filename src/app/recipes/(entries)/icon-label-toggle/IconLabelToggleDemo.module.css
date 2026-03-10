@@ -1,0 +1,74 @@
+/* interpolate-size は globals.css の :root で有効。このレシピでは inline-size をアニメーション */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.controlBtn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  cursor: pointer;
+}
+
+.controlBtn:hover {
+  background: light-dark(#eef2f7, #1a2332);
+}
+
+.controlBtn[aria-pressed="true"] {
+  font-weight: 600;
+}
+
+/* ピル: 閉じ＝1:1 正方形、開く＝テキスト幅まで calc-size でアニメ */
+.pill {
+  display: inline-flex;
+  isolation: isolate;
+  overflow: hidden;
+  block-size: 44px;
+  inline-size: 44px;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: inline-size 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pillOpen {
+  inline-size: calc-size(max-content, size);
+}
+
+.pillInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+  padding-inline: 0 1rem;
+  padding-block: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+.pillIcon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-inline-start: 11px;
+  color: inherit;
+}
+
+.pillLabel {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}

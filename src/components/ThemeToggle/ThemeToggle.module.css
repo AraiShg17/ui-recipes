@@ -6,8 +6,8 @@
 
 .themeToggle {
   position: fixed;
-  top: 12px;
-  right: 12px;
+  top: 20px;
+  right: 20px;
   z-index: 100;
   border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
   background: light-dark(var(--app-surface-light), var(--app-surface-dark));
@@ -35,7 +35,8 @@
     #ffffff
   );
   transition:
-    inset-inline-start var(--theme-transition-duration) var(--theme-transition-easing),
+    inset-inline-start var(--theme-transition-duration)
+      var(--theme-transition-easing),
     inline-size var(--theme-transition-duration) var(--theme-transition-easing),
     --themeToggleIndicatorTint var(--theme-transition-duration)
       var(--theme-transition-easing);
@@ -75,7 +76,8 @@
   color: light-dark(var(--app-text-light), var(--app-text-dark));
   transition:
     color var(--theme-transition-duration) var(--theme-transition-easing),
-    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+    background-color var(--theme-transition-duration)
+      var(--theme-transition-easing);
 }
 
 .themeToggleOption:hover .themeToggleLabel {

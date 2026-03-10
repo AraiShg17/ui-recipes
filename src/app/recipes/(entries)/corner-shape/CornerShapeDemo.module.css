@@ -1,0 +1,79 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.select {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid light-dark(#ccc, #555);
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  min-width: 10rem;
+}
+
+.slider {
+  width: 12rem;
+  accent-color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.previewRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+/* 共通: corner-shape と border-radius を CSS 変数で注入（radius 上限 80 に対し幅・高さ上限 160） */
+.previewBox {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--radius, 32px);
+  corner-shape: var(--corner-shape);
+  border: 1px solid light-dark(#ccc, #444);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.previewBoxSquare {
+  width: 160px;
+  height: 160px;
+  background: light-dark(#e8e8e8, #2a2a2a);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.previewBoxRect {
+  width: 240px;
+  height: 160px;
+  background: light-dark(#e8e8e8, #2a2a2a);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.previewLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
