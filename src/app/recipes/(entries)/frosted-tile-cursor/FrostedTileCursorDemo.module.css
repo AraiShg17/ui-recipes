@@ -1,0 +1,124 @@
+/* コンテナ: カーソル追従の円と、backdrop-filter blur のタイルグリッドをまとめるラッパー */
+.wrap {
+  position: relative;
+  isolation: isolate;
+  block-size: stretch;
+  overflow: hidden;
+  border-radius: 12px;
+  /* 背景自体はページ側で用意し、この中は主にレイアウト制御のみ */
+  border: 1px solid light-dark(rgb(0 0 0 / 1), rgb(255 255 255 / 1));
+}
+
+/* ホバーを促すガイドテキスト（中央表示、ホバー中はフェードアウト） */
+.wrap::after {
+  content: "Hover";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: light-dark(rgb(30 41 59), rgb(226 232 240));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.wrap:hover::after,
+.wrap:focus-within::after {
+  opacity: 0;
+}
+
+/* カラー用のカスタムプロパティ（色アニメ用） */
+@property --cursor-color {
+  syntax: "<color>";
+  initial-value: #ff9a9e;
+  inherits: false;
+}
+
+/* 円: linear-gradient 1本＋color-mix(var(--cursor-color), #fff / #000) で色をアニメさせる */
+.cursorGlow {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  left: var(--mouse-x, -9999px);
+  top: var(--mouse-y, -9999px);
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  /* linear-gradient 1本。ベース色は CSS 変数を color-mix で白寄せ/黒寄せして両端に置く */
+  background: linear-gradient(
+    to left bottom,
+    color-mix(in oklab, var(--cursor-color) 50%, #ffffff 50%) 0%,
+    color-mix(in oklab, var(--cursor-color) 50%, #000000 50%) 100%
+  );
+  animation:
+    cursorGlowSpin 12s linear infinite,
+    cursorColorCycle 18s ease-in-out infinite;
+}
+
+@keyframes cursorGlowSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ベース色を段階的に変えていく（離散的に色が切り替わるタイプのマーブル感） */
+@keyframes cursorColorCycle {
+  0%,
+  100% {
+    --cursor-color: #ff9a9e;
+  }
+  16% {
+    --cursor-color: #fecfef;
+  }
+  32% {
+    --cursor-color: #a8edea;
+  }
+  48% {
+    --cursor-color: #c4b5fd;
+  }
+  64% {
+    --cursor-color: #fcd34d;
+  }
+  80% {
+    --cursor-color: #f472b6;
+  }
+  90% {
+    --cursor-color: #67e8f9;
+  }
+}
+
+.wrap:hover .cursorGlow,
+.wrap:focus-within .cursorGlow {
+  opacity: 1;
+}
+
+/* タイルグリッド: 各タイルは backdrop-filter blur のみ。グリッドで並べてタイル状に見せる */
+.tileGrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 64px);
+  grid-auto-rows: 64px;
+  gap: 0;
+  pointer-events: none;
+}
+
+/* 角丸タイル: backdrop-filter で背後をぼかすだけ（半透明の塗りは使わない） */
+.tile {
+  width: stretch;
+  height: stretch;
+  border-radius: 16px;
+  background: transparent;
+  backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursorGlow {
+    transition: none;
+    animation: none;
+  }
+}

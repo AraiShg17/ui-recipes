@@ -1,0 +1,105 @@
+.demoWrap {
+  display: flex;
+  justify-content: safe center;
+  align-items: flex-start;
+}
+
+.group {
+  inline-size: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.accordion {
+  border-radius: 12px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding-inline: 0.75rem 1rem;
+  padding-block: 0.25rem 0.5rem;
+}
+
+.summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(
+      in oklab,
+      light-dark(var(--app-text-light), var(--app-text-dark)) 60%,
+      transparent
+    );
+    outline-offset: 2px;
+  }
+}
+
+.summaryLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.summaryIcon {
+  font-size: 0.75rem;
+  color: light-dark(#666, #aaa);
+  transition: transform var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.accordion[open] .summaryIcon {
+  transform: rotate(180deg);
+}
+
+/* ::details-content: 開閉時の表示切り替え（display/content-visibility）を allow-discrete でトランジション */
+.accordion::details-content {
+  transition:
+    height var(--theme-transition-duration) var(--theme-transition-easing),
+    opacity var(--theme-transition-duration) var(--theme-transition-easing),
+    display var(--theme-transition-duration) var(--theme-transition-easing) allow-discrete,
+    content-visibility var(--theme-transition-duration) var(--theme-transition-easing) allow-discrete;
+  height: 0;
+  opacity: 0;
+  overflow: clip;
+  content-visibility: hidden;
+
+  @starting-style {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.accordion[open]::details-content {
+  height: auto;
+  opacity: 1;
+  content-visibility: visible;
+}
+
+.panelInner {
+  padding-block: 0 0.5rem;
+  padding-inline: 0.25rem 0.5rem;
+}
+
+.text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion::details-content,
+  .summaryIcon {
+    transition: none;
+  }
+}
+

@@ -7,7 +7,6 @@ const entry: RecipeEntry = {
     "背景色と mix した縦グラデ（上やや黒め→下やや白め）、1px 白ボーダー、inset の白い影で立体感を出したピル型ボタン。",
   tags: ["UI"],
   category: "Components",
-  thumbnailSrc: "https://picsum.photos/id/5/400/210",
   /* 表示用コードは page で .module.css を readFileSync して渡している */
   code: "",
 };

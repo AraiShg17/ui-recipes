@@ -1,0 +1,89 @@
+.scope {
+  container-type: inline-size;
+}
+
+.structure {
+  --button-size: 3rem;
+  --icon-size: 1.3rem;
+  --marker-size: 0.5rem;
+
+  position: relative;
+  display: grid;
+  grid-template:
+    "slider" 1fr
+    "pagination" auto
+    / minmax(0, 1fr);
+  gap: 0.75rem;
+  max-inline-size: min(56rem, 100%);
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.scroller {
+  position: relative;
+  grid-area: slider;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  border-radius: 18px;
+  border: 1px solid light-dark(
+    rgb(248 250 252 / 0.16),
+    rgb(15 23 42 / 0.7)
+  );
+  background:
+    radial-gradient(circle at 0% 0%, rgb(148 163 184 / 0.5), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgb(56 189 248 / 0.5), transparent 55%),
+    light-dark(#020617, #020617);
+  box-shadow:
+    0 18px 45px rgb(15 23 42 / 0.7),
+    0 0 0 1px rgb(15 23 42 / 0.8);
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  position: relative;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  display: flex;
+}
+
+.item > img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* 前後アイコン（装飾用）。ネイティブスクロールだけでも位置の目安として重ねる */
+.icon {
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  inline-size: var(--icon-size);
+  block-size: var(--icon-size);
+  margin-block: auto;
+  color: rgb(15 23 42);
+  pointer-events: none;
+}
+
+.icon[data-dir="prev"] {
+  inset-inline-start: 0.85rem;
+}
+
+.icon[data-dir="next"] {
+  inset-inline-end: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroller {
+    scroll-behavior: auto;
+  }
+}
+

@@ -167,6 +167,12 @@
   overflow: clip;
 }
 
+.cardMediaPlaceholder {
+  position: absolute;
+  inset: 0;
+  background: light-dark(#c8c8c8, #3a3a3a);
+}
+
 .cardImage {
   object-fit: cover;
 }

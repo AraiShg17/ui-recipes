@@ -7,7 +7,6 @@ const entry: RecipeEntry = {
     "anchor-name と position-anchor でツールチップ・右メニュー・スライドする背景を CSS だけで配置。JS で位置計算しない。非対応は @supports でフォールバック。",
   tags: ["css"],
   category: "Components",
-  thumbnailSrc: "https://picsum.photos/id/2/400/210",
   /* 表示用コードは page で .module.css を readFileSync して渡している */
   code: "",
 };

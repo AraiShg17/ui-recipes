@@ -7,7 +7,6 @@ const entry: RecipeEntry = {
     "close/open でアイコンのみ（1:1 正方形）⇔ アイコン＋テキストを切り替え。テキスト表示時は inline-size を calc-size(auto, size) でアニメーションし、isolation でラベルを折り返さない。",
   tags: ["css", "UI"],
   category: "Components",
-  thumbnailSrc: "https://picsum.photos/id/9/400/210",
   /* 表示用コードは page で .module.css を readFileSync して渡している */
   code: "",
 };

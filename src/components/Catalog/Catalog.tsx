@@ -68,13 +68,20 @@ export function Catalog({ items }: CatalogProps) {
           <li key={item.slug} className={styles.cardItem}>
             <Link className={styles.card} href={`/recipes/${item.slug}`}>
               <div className={styles.cardMedia}>
-                <Image
-                  src={item.thumbnailSrc}
-                  alt={item.title}
-                  fill
-                  className={styles.cardImage}
-                  sizes="(max-width: 640px) 100vw, 480px"
-                />
+                {item.thumbnailSrc ? (
+                  <Image
+                    src={item.thumbnailSrc}
+                    alt={item.title}
+                    fill
+                    className={styles.cardImage}
+                    sizes="(max-width: 640px) 100vw, 480px"
+                  />
+                ) : (
+                  <div
+                    className={styles.cardMediaPlaceholder}
+                    aria-hidden
+                  />
+                )}
               </div>
               <h2 className={styles.cardTitle}>{item.title}</h2>
             </Link>

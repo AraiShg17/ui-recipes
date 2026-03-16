@@ -16,7 +16,6 @@
   padding: 4px;
   display: flex;
   gap: 4px;
-  box-shadow: 0 8px 24px color-mix(in oklab, #000000 14%, transparent);
   isolation: isolate;
   anchor-scope: --themeToggleActive;
 }
@@ -34,12 +33,14 @@
     light-dark(#1e3a8a, #2b4576) var(--themeToggleIndicatorTint),
     #ffffff
   );
-  transition:
-    inset-inline-start var(--theme-transition-duration)
-      var(--theme-transition-easing),
-    inline-size var(--theme-transition-duration) var(--theme-transition-easing),
-    --themeToggleIndicatorTint var(--theme-transition-duration)
-      var(--theme-transition-easing);
+  transition: all var(--theme-transition-duration)
+    var(--theme-transition-easing);
+}
+
+/* 未選択側を「アクション」（click / Space / Enter）した瞬間だけインジケーターの高さを少し縮めて動きを付ける */
+.themeToggle:has(.themeToggleInput:not(:checked):active) .themeToggleIndicator {
+  margin-top: 4px;
+  block-size: calc(anchor-size(height) - 8px);
 }
 
 .themeToggleOption {

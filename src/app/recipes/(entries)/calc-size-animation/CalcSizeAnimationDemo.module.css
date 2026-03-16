@@ -73,13 +73,11 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease, margin-top 0.2s ease;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+  transition: background 0.2s ease, margin-top 0.2s ease;
 }
 
 .moreButton:hover {
   background: light-dark(#eef2f7, #1a2332);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
 }
 
 .readMoreCard[data-expanded] .moreButton {

@@ -10,8 +10,8 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 42px 20px 80px;
-  display: block flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: 16px;
 }
 
@@ -52,11 +52,10 @@
     position: absolute;
     inset: 0;
     background: white;
-    opacity: 0.4;
+    opacity: 1;
     border-radius: 9999px;
     transform: scale(0);
-    transition: all var(--theme-transition-duration)
-      var(--theme-transition-easing);
+    transition: transform var(--theme-transition-duration) var(--theme-transition-easing);
     pointer-events: none;
     z-index: 1;
   }

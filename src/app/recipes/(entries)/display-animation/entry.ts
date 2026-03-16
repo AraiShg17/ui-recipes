@@ -7,7 +7,6 @@ const entry: RecipeEntry = {
     "display: none ⇔ block の切り替え時にフェード・スケールを付ける。transition の allow-discrete と @starting-style で、離散プロパティの変化をアニメーション可能にする。",
   tags: ["css"],
   category: "CSS Styling",
-  thumbnailSrc: "https://picsum.photos/id/3/400/210",
   /* 表示用コードは page で .module.css を readFileSync して渡している */
   code: "",
 };
