@@ -57,18 +57,11 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.08s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .button:hover {
   background: light-dark(#020617, #ffffff);
-}
-
-.button:active {
-  transform: translateY(1px);
 }
 
 .secondaryButton {

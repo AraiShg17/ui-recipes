@@ -1,0 +1,165 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 280px;
+}
+
+.menu {
+  position: relative;
+  inline-size: 220px;
+  block-size: 220px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.centerButton {
+  position: relative;
+  z-index: 2;
+  inline-size: 88px;
+  block-size: 88px;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  box-shadow:
+    inset 0 0 0 1px
+      color-mix(
+        in oklab,
+        light-dark(var(--app-border-dark), var(--app-border-light)) 30%,
+        transparent
+      ),
+    inset 0 0 0 3px
+      color-mix(
+        in oklab,
+        light-dark(var(--app-border-light), var(--app-border-dark)) 30%,
+        transparent
+      ),
+    inset 0 0 0 4px
+      color-mix(
+        in oklab,
+        light-dark(var(--app-border-dark), var(--app-border-light)) 30%,
+        transparent
+      );
+  background: radial-gradient(
+      circle at 30% 0%,
+      light-dark(#e5e7eb, #020617),
+      transparent 60%
+    ),
+    light-dark(#ffffff, #111827);
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: radial-gradient(
+        circle at 30% 0%,
+        light-dark(#e5e7eb, #020617),
+        transparent 60%
+      ),
+      light-dark(#f4f4f4, #0c1428);
+  }
+}
+
+.centerButtonIcon {
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  overflow: visible;
+  filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* 蹄全体：1本の path。開閉アニメのみ（遅延なし） */
+.ringPath {
+  transform-origin: 50% 50%;
+  transform: scale(0.8);
+  opacity: 0;
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.9, 0.2, 1.1),
+    opacity 0.18s ease-out;
+  fill: light-dark(#27282a, #ebebeb);
+  stroke: light-dark(
+    color-mix(in oklab, #ffffff 40%, transparent),
+    color-mix(in oklab, #020617 60%, transparent)
+  );
+  stroke-width: 1.2;
+}
+
+.ringPath[data-open] {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 追従ハイライト: hoveredIndex の角度に向かって回転して追従 */
+.highlight {
+  transform-box: view-box;
+  transform-origin: center;
+  transform: rotate(var(--rot, 0deg));
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1.1);
+  pointer-events: none;
+}
+
+.highlight[data-show] {
+  opacity: 1;
+}
+
+.highlightPath {
+  fill: light-dark(rgb(255 255 255 / 0.2), rgb(0 0 0 / 0.2));
+}
+
+/* 各セグメント：透明な当たり判定 ＋ アイコン。開閉で順番に表示 */
+.segment {
+  transform-origin: 50% 50%;
+  transform: scale(0.8);
+  opacity: 0;
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.9, 0.2, 1.1),
+    opacity 0.18s ease-out;
+}
+
+.segment[data-open] {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.segmentHitArea {
+  fill: transparent;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* ホバーの塗りは追従ハイライトと二重になるので無効化（必要なら highlight 側の色で調整） */
+
+.segmentIconWrap {
+  pointer-events: none;
+}
+
+.segmentIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 20px;
+  block-size: 20px;
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight {
+    transition: none;
+  }
+
+  .segment {
+    transition: none;
+    transform: scale(1);
+    opacity: 1;
+  }
+}
