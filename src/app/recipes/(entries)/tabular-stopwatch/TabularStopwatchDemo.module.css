@@ -35,6 +35,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-align: right;
+  font-variant-numeric: normal;
 }
 
 /* ここで tabular-nums を有効化。カウンター用途の数字はこれをデフォルトにしたい */
@@ -57,7 +58,9 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .button:hover {
@@ -93,4 +96,3 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
-

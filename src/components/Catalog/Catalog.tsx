@@ -34,14 +34,11 @@ export function Catalog({ items }: CatalogProps) {
   return (
     <div className={styles.catalog}>
       <div className={styles.searchArea}>
-        <label className={styles.searchLabel} htmlFor="recipe-search">
-          実装を検索
-        </label>
         <input
           id="recipe-search"
           className={styles.searchInput}
           type="search"
-          placeholder="例: gradient"
+          placeholder="検索"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -77,10 +74,7 @@ export function Catalog({ items }: CatalogProps) {
                     sizes="(max-width: 640px) 100vw, 480px"
                   />
                 ) : (
-                  <div
-                    className={styles.cardMediaPlaceholder}
-                    aria-hidden
-                  />
+                  <div className={styles.cardMediaPlaceholder} aria-hidden />
                 )}
               </div>
               <h2 className={styles.cardTitle}>{item.title}</h2>
@@ -90,7 +84,9 @@ export function Catalog({ items }: CatalogProps) {
       </ul>
 
       {filtered.length === 0 && (
-        <p className={styles.empty}>条件に一致する実装が見つかりませんでした。</p>
+        <p className={styles.empty}>
+          条件に一致する実装が見つかりませんでした。
+        </p>
       )}
     </div>
   );

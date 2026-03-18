@@ -16,12 +16,6 @@
   gap: 8px;
 }
 
-.searchLabel {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
 .searchInput {
   transition: var(--theme-transition);
   border: 1px solid
@@ -113,6 +107,7 @@
 }
 
 .card {
+  block-size: stretch;
   transition: var(--theme-transition);
   container-type: inline-size;
   position: relative;

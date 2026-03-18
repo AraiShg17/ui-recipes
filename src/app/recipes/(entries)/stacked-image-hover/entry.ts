@@ -3,9 +3,7 @@ import type { RecipeEntry } from "@/app/recipes/types";
 
 const entry: RecipeEntry = {
   slug: "stacked-image-hover",
-  title: "フィルターホバーアニメーション",
-  summary:
-    "同じ画像を2枚重ね、filter と clip-path の transition でホバー時にグレーからカラーへ見せるレシピ。",
+  title: "filter hover animation",
   tags: ["css"],
   category: "CSS Styling",
   thumbnailSrc: stackedImage.src,

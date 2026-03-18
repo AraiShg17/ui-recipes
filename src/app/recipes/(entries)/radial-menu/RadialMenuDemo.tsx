@@ -10,16 +10,27 @@ type Item = {
 };
 
 const ITEMS: Item[] = [
-  { id: 0, label: "プロフィール", icon: "👤" },
+  { id: 0, label: "ユーザー", icon: "👤" },
   { id: 1, label: "設定", icon: "⚙️" },
-  { id: 2, label: "ドキュメント", icon: "📄" },
+  { id: 2, label: "検索", icon: "🔎" },
   { id: 3, label: "通知", icon: "💬" },
-  { id: 4, label: "ダッシュボード", icon: "📊" },
-  { id: 5, label: "ダッシュボード", icon: "📊" },
+  { id: 4, label: "お気に入り", icon: "⭐️" },
+  { id: 5, label: "ファイル", icon: "📄" },
 ];
 
 const OUTER_RADIUS = 96;
 const INNER_RADIUS = 60;
+
+const BURST_ITEMS: Item[] = [
+  { id: 0, label: "ユーザー", icon: "👤" },
+  { id: 1, label: "設定", icon: "⚙️" },
+  { id: 2, label: "検索", icon: "🔎" },
+  { id: 3, label: "通知", icon: "💬" },
+  { id: 4, label: "お気に入り", icon: "⭐️" },
+  { id: 5, label: "ファイル", icon: "📄" },
+  { id: 6, label: "共有", icon: "🔗" },
+  { id: 7, label: "ヘルプ", icon: "❓" },
+];
 
 function polarToCartesian(radius: number, angleDeg: number) {
   const rad = (Math.PI / 180) * angleDeg;
@@ -147,13 +158,69 @@ function RingMenu({
   );
 }
 
+function BurstMenu() {
+  const [open, setOpen] = useState(false);
+  const radius = 78;
+
+  return (
+    <div className={styles.menu}>
+      <button
+        type="button"
+        className={styles.centerButton}
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className={styles.centerButtonIcon}>≡</span>
+      </button>
+
+      <div className={styles.burst} data-open={open || undefined}>
+        {BURST_ITEMS.map((item, i) => {
+          const angle = -90 + (360 / BURST_ITEMS.length) * i;
+          const rad = (Math.PI / 180) * angle;
+          const x = Math.cos(rad) * radius;
+          const y = Math.sin(rad) * radius;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              className={styles.burstItem}
+              style={
+                {
+                  "--x": `${x.toFixed(2)}px`,
+                  "--y": `${y.toFixed(2)}px`,
+                  "--i": i,
+                } as React.CSSProperties
+              }
+              aria-label={item.label}
+              onClick={() => setOpen(false)}
+            >
+              <span className={styles.burstIcon} aria-hidden>
+                {item.icon}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function RadialMenuDemo() {
   return (
     <div className={styles.wrap}>
-      <RingMenu
-        totalArcDeg={HORSESHOE.totalArcDeg}
-        startBase={HORSESHOE.startBase}
-      />
+      <section className={styles.sample}>
+        <p className={styles.sampleLabel}>{HORSESHOE.label}</p>
+        <RingMenu
+          totalArcDeg={HORSESHOE.totalArcDeg}
+          startBase={HORSESHOE.startBase}
+        />
+      </section>
+
+      <section className={styles.sample}>
+        <p className={styles.sampleLabel}>バースト</p>
+        <BurstMenu />
+      </section>
     </div>
   );
 }

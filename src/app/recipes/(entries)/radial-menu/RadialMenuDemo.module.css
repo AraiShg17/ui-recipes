@@ -1,8 +1,24 @@
 .wrap {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  gap: 2.5rem;
   min-block-size: 280px;
+}
+
+.sample {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sampleLabel {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: light-dark(#6b7280, #9ca3af);
 }
 
 .menu {
@@ -75,6 +91,63 @@
   margin: auto;
   overflow: visible;
   filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* バースト（飛び出し） */
+.burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.burstItem {
+  --x: 0px;
+  --y: 0px;
+  --i: 0;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  inline-size: 44px;
+  block-size: 44px;
+  margin-inline-start: -22px;
+  margin-block-start: -22px;
+  border-radius: 999px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+
+  opacity: 0;
+  transform: scale(0.88);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1.1),
+    opacity 0.4s ease-out,
+    scale 0.4s cubic-bezier(0.2, 0.9, 0.2, 1.1);
+  transition-delay: calc(var(--i) * 18ms);
+
+  &:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+}
+
+.burst[data-open] .burstItem {
+  opacity: 1;
+  transform: translate(var(--x), var(--y)) scale(1);
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.burstIcon {
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 /* 蹄全体：1本の path。開閉アニメのみ（遅延なし） */

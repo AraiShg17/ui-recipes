@@ -22,10 +22,11 @@ function formatTime(ms: number) {
 }
 
 export function TabularStopwatchDemo() {
-  const [{ startedAt, elapsedBeforeStart }, setState] = useState<StopwatchState>({
-    startedAt: null,
-    elapsedBeforeStart: 0,
-  });
+  const [{ startedAt, elapsedBeforeStart }, setState] =
+    useState<StopwatchState>({
+      startedAt: null,
+      elapsedBeforeStart: 0,
+    });
   const [now, setNow] = useState(() => performance.now());
 
   useEffect(() => {
@@ -41,24 +42,24 @@ export function TabularStopwatchDemo() {
   }, [startedAt]);
 
   const isRunning = startedAt != null;
-  const elapsed = isRunning ? now - startedAt + elapsedBeforeStart : elapsedBeforeStart;
+  const elapsed = isRunning
+    ? now - startedAt + elapsedBeforeStart
+    : elapsedBeforeStart;
 
   return (
     <div className={styles.wrap}>
-      <p className={styles.note}>
-        同じストップウォッチを 2 つ表示し、右のタイマーだけ{" "}
-        <code>font-variant-numeric: tabular-nums;</code> を指定しています。数字がカウントアップしても、tabular-nums
-        側は桁幅が固定されるためレイアウトがガタつきにくくなります。
-      </p>
-
       <div className={styles.timers}>
         <div className={styles.timerColumn}>
-          <p className={styles.timerLabel}>1つ目：通常（プロポーショナル）</p>
+          <p className={styles.timerLabel}>font-variant-numeric: normal</p>
           <p className={styles.timerValue}>{formatTime(elapsed)}</p>
         </div>
         <div className={styles.timerColumn}>
-          <p className={styles.timerLabel}>2つ目：tabular-nums を適用</p>
-          <p className={`${styles.timerValue} ${styles.tabularNums}`}>{formatTime(elapsed)}</p>
+          <p className={styles.timerLabel}>
+            font-variant-numeric: tabular-nums
+          </p>
+          <p className={`${styles.timerValue} ${styles.tabularNums}`}>
+            {formatTime(elapsed)}
+          </p>
         </div>
       </div>
 
@@ -104,4 +105,3 @@ export function TabularStopwatchDemo() {
     </div>
   );
 }
-

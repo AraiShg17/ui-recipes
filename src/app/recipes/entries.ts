@@ -51,10 +51,9 @@ export async function getRecipeIndex(): Promise<RecipeIndexItem[]> {
 
   return entries
     .filter((entry): entry is RecipeEntry => entry !== null)
-    .map(({ slug, title, summary, tags, category, thumbnailSrc }) => ({
+    .map(({ slug, title, tags, category, thumbnailSrc }) => ({
       slug,
       title,
-      summary,
       tags,
       category,
       thumbnailSrc,
