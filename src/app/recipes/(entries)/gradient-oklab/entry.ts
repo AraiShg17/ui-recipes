@@ -3,7 +3,7 @@ import type { RecipeEntry } from "@/app/recipes/types";
 
 const entry: RecipeEntry = {
   slug: "gradient-oklab",
-  title: "Gradient interpolation sample",
+  title: "gradient interpolation",
   tags: ["css"],
   category: "CSS Styling",
   thumbnailSrc: gradientOklabImage.src,

@@ -2,7 +2,7 @@ import type { RecipeEntry } from "@/app/recipes/types";
 
 const entry: RecipeEntry = {
   slug: "radial-menu",
-  title: "Menu Design Sample",
+  title: "menu design",
   tags: ["svg", "UI"],
   category: "Components",
   code: "",
