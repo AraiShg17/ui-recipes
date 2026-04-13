@@ -110,6 +110,36 @@ export function CornerShapeDemo() {
           <span className={styles.previewLabel}>長方形 240×160</span>
         </div>
       </div>
+
+      <section
+        className={styles.presetGallery}
+        aria-labelledby="corner-shape-preset-gallery-title"
+      >
+        <h2 id="corner-shape-preset-gallery-title" className={styles.galleryTitle}>
+          プリセット比較（border-radius 32px 固定）
+        </h2>
+        <p className={styles.galleryHint}>
+          同じ半径で superellipse(k) の違いだけを並べています。
+        </p>
+        <div className={styles.presetGrid}>
+          {SHAPE_PRESETS.map(({ value, label, k }) => (
+            <div key={value} className={styles.presetItem}>
+              <div
+                className={styles.presetBox}
+                style={
+                  {
+                    "--corner-shape": toSuperellipse(k),
+                    "--radius": "32px",
+                  } as React.CSSProperties
+                }
+                title={`${label} — superellipse(${k})`}
+              />
+              <span className={styles.presetCaption}>{label}</span>
+              <span className={styles.presetK}>k = {k}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

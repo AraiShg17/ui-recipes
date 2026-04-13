@@ -1,3 +1,4 @@
+import textIndentThumb from "./images/text-indent.png";
 import type { RecipeEntry } from "@/app/recipes/types";
 
 const entry: RecipeEntry = {
@@ -5,6 +6,7 @@ const entry: RecipeEntry = {
   title: "text-indent (hanging / each-line)",
   tags: ["css", "typography"],
   category: "CSS Styling",
+  thumbnailSrc: textIndentThumb.src,
   code: "",
 };
 

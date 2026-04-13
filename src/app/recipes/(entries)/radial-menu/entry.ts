@@ -1,3 +1,4 @@
+import radialMenuThumb from "./images/radial-menu.png";
 import type { RecipeEntry } from "@/app/recipes/types";
 
 const entry: RecipeEntry = {
@@ -5,6 +6,7 @@ const entry: RecipeEntry = {
   title: "menu design",
   tags: ["svg", "UI"],
   category: "Components",
+  thumbnailSrc: radialMenuThumb.src,
   code: "",
 };
 

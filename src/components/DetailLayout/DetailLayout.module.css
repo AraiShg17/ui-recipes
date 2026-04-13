@@ -11,7 +11,9 @@
   margin: 0 auto;
   padding: 42px 20px 80px;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto auto;
+  grid-auto-rows: auto;
+  align-content: start;
   gap: 16px;
 }
 
@@ -93,8 +95,13 @@
 
 .detailLayoutContentGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, 480px), 1fr)
+  );
   gap: 20px;
+  align-items: start;
+  min-width: 0;
 }
 
 .detailLayoutBlock {
@@ -144,4 +151,11 @@
   padding: 16px;
   font-size: 0.9rem;
   line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .detailLayout {
+    padding: 28px 16px 56px;
+    gap: 14px;
+  }
 }

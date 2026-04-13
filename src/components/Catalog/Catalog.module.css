@@ -197,6 +197,12 @@
 @media (max-width: 640px) {
   .card {
     border-radius: 14px;
+    /* 1 列時に親グリッド行の余白まで縦に伸びないようにする */
+    block-size: auto;
+  }
+
+  .cardList {
+    grid-template-columns: 1fr;
   }
 }
 
