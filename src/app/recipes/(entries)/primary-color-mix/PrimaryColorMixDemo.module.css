@@ -1,0 +1,96 @@
+/* --primary-color はルート要素へ style={{ "--primary-color": hex }} で渡す */
+
+.wrap {
+  --primary-color: #2563eb;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: light-dark(#f4f4f5, #111113);
+}
+
+.colorInput {
+  inline-size: 3rem;
+  block-size: 2.25rem;
+  padding: 0;
+  border: 1px solid light-dark(#d4d4d8, #3f3f46);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 6px;
+  }
+
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: 6px;
+  }
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: min(100%, 28rem);
+}
+
+.mixTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  border: 1px solid light-dark(#e4e4e7, #2d2d30);
+  border-radius: 8px;
+  overflow: hidden;
+  background: light-dark(#ffffff, #1c1c1f);
+}
+
+.mixCaption {
+  caption-side: top;
+  text-align: start;
+  padding-block-end: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: light-dark(#71717a, #a1a1aa);
+}
+
+.mixLabel {
+  vertical-align: top;
+  white-space: nowrap;
+  padding: 0.625rem 0.75rem;
+  font-weight: 600;
+  text-align: start;
+  color: light-dark(#3f3f46, #a1a1aa);
+  border-inline-end: 1px solid light-dark(#e4e4e7, #2d2d30);
+  background: light-dark(#fafafa, #27272a);
+}
+
+.mixValue {
+  padding: 0.625rem 0.75rem;
+  word-break: break-word;
+}
+
+.mixValue code {
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  font-size: 0.78em;
+  line-height: 1.5;
+  color: light-dark(#1e40af, #93c5fd);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: color-mix(in oklab, var(--primary-color) 50%, transparent 50%);
+}
