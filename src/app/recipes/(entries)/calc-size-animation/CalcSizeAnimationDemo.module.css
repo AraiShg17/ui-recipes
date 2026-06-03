@@ -1,7 +1,3 @@
-:root {
-  interpolate-size: allow-keywords;
-}
-
 .section {
   display: flex;
   flex-direction: column;

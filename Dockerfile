@@ -8,7 +8,8 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+# Turbopack はネイティブ SWC が無い環境では WASM に落ちて失敗するため Webpack でビルド
+RUN npx next build --webpack
 
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app

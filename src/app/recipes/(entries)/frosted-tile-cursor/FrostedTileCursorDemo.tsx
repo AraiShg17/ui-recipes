@@ -4,7 +4,7 @@ import { useRef, useState, useCallback, useMemo } from "react";
 import styles from "./FrostedTileCursorDemo.module.css";
 
 const TILE_SIZE = 48;
-const COLS = 24;
+const COLS = 12;
 const ROWS = 8;
 
 export function FrostedTileCursorDemo() {

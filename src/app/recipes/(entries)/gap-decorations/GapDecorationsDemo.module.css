@@ -1,0 +1,208 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-start;
+  max-width: 100%;
+}
+
+.lead,
+.note,
+.controlHint {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.lead a,
+.note a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.note,
+.controlHint {
+  opacity: 0.82;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  align-items: flex-end;
+}
+
+.fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  border-radius: 8px;
+}
+
+.legend {
+  padding: 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.radioLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.select {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid light-dark(#ccc, #555);
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+  color: inherit;
+  min-width: 10rem;
+}
+
+.slider {
+  width: 12rem;
+  accent-color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+/* gap + row-rule / column-rule（CSS Gaps Module） */
+.board {
+  --gap: 20px;
+  --rule-width: 2px;
+  --rule-style: solid;
+  --rule-color: light-dark(#9aa8bc, #6b8ab8);
+  --rule-color-list: light-dark(#c27a6b, #e8a090), light-dark(#5a9e9e, #7ec8c0);
+  --rule-break: normal;
+  --rule-image-url: none;
+
+  gap: var(--gap);
+  row-rule-width: var(--rule-width);
+  row-rule-style: var(--rule-style);
+  row-rule-color: var(--rule-color);
+  column-rule-width: var(--rule-width);
+  column-rule-style: var(--rule-style);
+  column-rule-color: var(--rule-color);
+  row-rule-break: var(--rule-break);
+  column-rule-break: var(--rule-break);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+}
+
+.boardMultiColor {
+  row-rule-color: var(--rule-color-list);
+  column-rule-color: var(--rule-color-list);
+}
+
+/* row-rule-image は未普及 — 対応時は画像、未対応時は --rule-color の線 */
+.boardRuleImage {
+  row-rule-width: var(--rule-width);
+  row-rule-style: solid;
+  row-rule-color: var(--rule-color);
+  column-rule-width: var(--rule-width);
+  column-rule-style: solid;
+  column-rule-color: var(--rule-color);
+  row-rule-image: var(--rule-image-url);
+  column-rule-image: var(--rule-image-url);
+}
+
+.boardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(4.5rem, 1fr));
+  width: min(100%, 22rem);
+}
+
+.boardFlex {
+  display: flex;
+  flex-wrap: wrap;
+  width: min(100%, 22rem);
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.5rem;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  background: light-dark(#eef2f8, #1a2438);
+  border: 1px solid light-dark(#d8e0ef, #2d3d5c);
+}
+
+.boardFlex .cell {
+  flex: 1 1 calc(33.333% - var(--gap));
+  min-width: 4.5rem;
+}
+
+.propsGuide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 42rem;
+  padding-block-start: 0.25rem;
+}
+
+.guideTitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.propsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.propsItem {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.propsItem dt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.propsItem dt code {
+  font-size: 0.8125rem;
+}
+
+.propsItem dd {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  opacity: 0.88;
+}
+
+.propsItem dd code {
+  font-size: 0.75rem;
+}
