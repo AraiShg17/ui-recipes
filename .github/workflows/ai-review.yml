@@ -20,7 +20,13 @@ jobs:
         run: |
           set -euo pipefail
           git diff "${{ github.event.pull_request.base.sha }}"..."${{ github.event.pull_request.head.sha }}" > /tmp/pr.diff
-          head -c 30000 /tmp/pr.diff > /tmp/pr_trimmed.diff
+          DIFF_LIMIT=100000
+          head -c "$DIFF_LIMIT" /tmp/pr.diff > /tmp/pr_trimmed.diff
+          FULL_SIZE=$(wc -c < /tmp/pr.diff | tr -d ' ')
+          TRIM_SIZE=$(wc -c < /tmp/pr_trimmed.diff | tr -d ' ')
+          if [ "$TRIM_SIZE" -lt "$FULL_SIZE" ]; then
+            echo "PR diff truncated: ${TRIM_SIZE}/${FULL_SIZE} bytes (limit ${DIFF_LIMIT})"
+          fi
 
       - name: Build review system prompt
         run: |
