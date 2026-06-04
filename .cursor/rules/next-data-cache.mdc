@@ -1,0 +1,86 @@
+---
+description: Next.js App Router data/cache/mutation（fetch cache・revalidate・Server Actions）
+globs: "**/*.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+# Next Data Cache
+
+Next.js App Router では data visibility と cache invalidation を明示する。
+fetch、Server Actions、Route Handlers、revalidation を曖昧にしない。
+
+## Fetch policy
+
+| データ | 方針 |
+|--------|------|
+| 静的 CMS / marketing | `next: { revalidate: 3600 }` |
+| 頻繁に変わる一覧 | tag 付き fetch + `revalidateTag()` |
+| ユーザー固有 dashboard | `cache: 'no-store'` または dynamic route |
+| mutation 直後に見せたいデータ | Server Action 後 `revalidatePath()` / `revalidateTag()` |
+| private auth/session 依存 | `cookies()` / `headers()` 使用を明示し static 前提にしない |
+
+```ts
+export async function fetchPosts() {
+  const response = await fetch('https://example.com/posts', {
+    next: { revalidate: 3600, tags: ['posts'] },
+  });
+  if (!response.ok) throw new Error('Failed to fetch posts');
+  return response.json();
+}
+```
+
+```ts
+export async function fetchDashboard() {
+  const response = await fetch('https://example.com/dashboard', {
+    cache: 'no-store',
+  });
+  if (!response.ok) throw new Error('Failed to fetch dashboard');
+  return response.json();
+}
+```
+
+## Server Actions
+
+- action file は `'use server'`
+- mutation 後に `revalidatePath()` または `revalidateTag()` を呼ぶ
+- 入力は server 側で schema validation する
+- redirect する action と state を返す action を混ぜない
+- payment / create / destructive は idempotency key を使う
+
+```ts
+'use server';
+
+import { revalidateTag } from 'next/cache';
+import { z } from 'zod';
+
+const schema = z.object({
+  title: z.string().min(1).max(120),
+});
+
+export async function createPost(_prevState: unknown, formData: FormData) {
+  const parsed = schema.safeParse({
+    title: formData.get('title'),
+  });
+
+  if (!parsed.success) {
+    return { ok: false, message: '入力内容を確認してください' };
+  }
+
+  await savePost(parsed.data);
+  revalidateTag('posts');
+  return { ok: true, message: '保存しました' };
+}
+```
+
+## Route Handlers
+
+- Browser から直接叩く BFF/API が必要な時だけ Route Handler を作る
+- Server Component から同一 app 内 Route Handler を fetch しない。直接関数を呼ぶ
+- GET は cache 方針、POST は CSRF / auth / rate limit を確認
+
+## Do not
+
+- `fetch()` の cache 方針を空気で決めない
+- mutation 後に revalidation を忘れない
+- user-specific data を static cache に乗せない
+- `cookies()` / `headers()` 使用 route を static 前提で設計しない

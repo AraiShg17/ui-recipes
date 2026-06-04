@@ -1,0 +1,85 @@
+---
+description: Chrome先行パフォーマンス（INP・long task・scheduler・content-visibility）
+globs: "**/*.{ts,tsx,js,jsx,css}"
+alwaysApply: false
+---
+
+# Modern Performance
+
+Core Web Vitals、特に INP を意識する。Chrome 先行 API を積極採用し、
+重い処理を入力・描画・遷移のクリティカルパスから外す。
+
+## Rendering
+
+- 画面外の重いセクションに `content-visibility: auto`
+- CLS 防止に `contain-intrinsic-size`
+- LCP 画像は `fetchpriority="high"`、`width` / `height` 必須、`loading="lazy"` 禁止
+- below fold の画像だけ `loading="lazy"` を使う
+
+```css
+.belowFoldSection {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+```
+
+## INP / Long Tasks
+
+- 50ms を超える同期処理を分割する
+- 入力直後に JSON parse、巨大配列処理、DOM 大量更新をしない
+- `scheduler.postTask()` を優先し、未対応時は `requestIdleCallback()` / `setTimeout()` に落とす
+- `AbortController` で古い非同期処理を止める
+
+```ts
+type TaskPriority = 'user-blocking' | 'user-visible' | 'background';
+
+export function scheduleTask(callback: () => void, priority: TaskPriority = 'user-visible') {
+  const maybeScheduler = globalThis as typeof globalThis & {
+    scheduler?: { postTask: (cb: () => void, options?: { priority?: TaskPriority }) => Promise<void> };
+  };
+
+  if (maybeScheduler.scheduler?.postTask) {
+    return maybeScheduler.scheduler.postTask(callback, { priority });
+  }
+
+  return new Promise<void>((resolve) => {
+    const run = () => {
+      callback();
+      resolve();
+    };
+    if ('requestIdleCallback' in globalThis) {
+      requestIdleCallback(run);
+      return;
+    }
+    setTimeout(run, 0);
+  });
+}
+```
+
+## Network / Analytics
+
+- 分析イベントはバッチ化する
+- ページ離脱時は `navigator.sendBeacon()`、fallback は `fetch(..., { keepalive: true })`
+- 背景 fetch は優先度を下げ、重要リソースと競合させない
+
+```ts
+export function sendAnalyticsBatch(payload: unknown) {
+  const body = JSON.stringify(payload);
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon('/analytics', new Blob([body], { type: 'application/json' }));
+    return;
+  }
+  void fetch('/analytics', {
+    method: 'POST',
+    body,
+    keepalive: true,
+    headers: { 'content-type': 'application/json' },
+  });
+}
+```
+
+## SPA / View Transitions
+
+- SPA 遷移中に同期 import や巨大計算を挟まない
+- View Transitions は `prefers-reduced-motion` を尊重する
+- 遷移前 prefetch と条件付き async import を使う

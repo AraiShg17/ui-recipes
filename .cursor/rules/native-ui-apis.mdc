@@ -1,0 +1,101 @@
+---
+description: Dialog・Popover・Invoker Commands・View Transitions・Anchor
+globs: "**/*.{tsx,css,html}"
+alwaysApply: false
+---
+
+# Native UI APIs
+
+## Invoker Commands + Popover（推奨）
+
+対象ブラウザで対応を確認し、未対応環境では polyfill または `showModal()` /
+`showPopover()` 等の従来呼び出しにフォールバックする。
+
+```html
+<button commandfor="menu" command="toggle-popover">Menu</button>
+<div id="menu" popover="auto">…</div>
+```
+
+| command | 用途 |
+|---------|------|
+| `show-modal` | dialog モーダル |
+| `close` | dialog 閉じる |
+| `toggle-popover` | popover トグル |
+
+Polyfill（条件付き import）:
+
+```js
+if (!('commandForElement' in HTMLButtonElement.prototype)) import('invokers-polyfill');
+if (!('popover' in HTMLElement.prototype)) import('@oddbird/popover-polyfill/fn').then(({ apply }) => apply());
+```
+
+```css
+[popover]:is(:popover-open, .\:popover-open) { display: block; }
+```
+
+## dialog
+
+- 削除確認・ログイン等 → `showModal()`
+- `::backdrop`, `overscroll-behavior: contain`
+- `@starting-style` + `transition` + `allow-discrete`
+
+## View Transitions
+
+- MPA / same-origin navigation は `@view-transition { navigation: auto; }`
+- SPA / same-document update は `document.startViewTransition(() => updateDOM())`
+- shared element は遷移前後の対応要素に同じ `view-transition-name`
+- 同時表示される複数要素で `view-transition-name` を重複させない
+- `prefers-reduced-motion` では `::view-transition-old/new(*)` の animation を止める
+- Next.js App Router で route 遷移に View Transitions を適用する場合は、`next/link` と `next-view-transitions` の `Link` を混在させない。採用するなら内部リンクを wrapper に統一する
+
+```css
+@view-transition {
+  navigation: auto;
+}
+
+.cardImage,
+.detailHero {
+  view-transition-name: selected-image;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+```
+
+```tsx
+// components/AppLink/AppLink.tsx
+import { Link as ViewTransitionLink } from 'next-view-transitions';
+import type { ComponentProps } from 'react';
+
+export function AppLink(props: ComponentProps<typeof ViewTransitionLink>) {
+  return <ViewTransitionLink {...props} />;
+}
+```
+
+```ts
+if ('startViewTransition' in document) {
+  document.startViewTransition(() => {
+    // same-document DOM / state update
+  });
+}
+```
+
+## Anchor Positioning
+
+```css
+.trigger { anchor-name: --t; }
+.panel {
+  position-anchor: --t;
+  bottom: calc(anchor(top) + 8px);
+}
+```
+
+## details
+
+`::details-content` でアニメーション。排他: `<details name="same">`。
+
+参考: [Chrome Developers Web Platform](https://developer.chrome.com/docs/web-platform/) / [MDN HTML](https://developer.mozilla.org/docs/Web/HTML)

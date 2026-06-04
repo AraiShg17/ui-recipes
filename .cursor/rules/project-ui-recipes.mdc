@@ -1,0 +1,26 @@
+---
+description: UI Recipes リポジトリ固有の方針（agent/ ディレクトリと併用）
+alwaysApply: true
+---
+
+# UI Recipes（このリポジトリ）
+
+## 優先順位
+
+1. ユーザーの直接指示
+2. ルート `AGENTS.md`
+3. `agent/*.md`（product, tech, structure, development, security ほかトピック別）
+4. `.cursor/rules/` の AI Frontend Rules Pack
+
+## スタック（固定）
+
+- Next.js App Router + TypeScript + CSS Modules（Tailwind / CSS-in-JS は使わない）
+- レシピは `src/app/recipes/(entries)/<slug>/` に Demo + `*.module.css` + `entry.ts` + `page.tsx`
+- 一覧用 `thumbnailSrc` は `entry.ts` で画像 import
+- 詳細ページは `DetailLayout` + `readFileSync` で module.css をコード表示
+
+## 作業時
+
+- 変更は小さく。依頼外のリファクタ禁止
+- `npm run build` / `npm run lint` で確認
+- シークレットは `.env.local` のみ。コミットしない

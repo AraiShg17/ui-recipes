@@ -1,0 +1,259 @@
+---
+description: Chrome先行CSS Scroll実装（scroll timeline・scroll-state・CSS carousel・reading-flow）
+globs: "**/*.{css,tsx,html}"
+alwaysApply: false
+---
+
+# CSS Scroll Motion
+
+scroll listener / IntersectionObserver / JS carousel を作る前に、Chrome 先行の CSS
+で実装できるか検討する。Scroll-driven animations、scroll-state queries、
+CSS-only carousel、reading-flow を積極採用する。
+
+## Scroll-driven animations
+
+- 読了バー: `animation-timeline: scroll(root block)`
+- reveal: `animation-timeline: view()` + `animation-range`
+- scrollytelling: `view-timeline-name` を section に付け、子要素の `animation-timeline` で参照
+- 複雑な scroll container では `scroll-timeline-name` / `scroll-timeline-axis` で timeline を命名
+- `prefers-reduced-motion` で無効化または簡略化する
+
+```css
+.readingProgress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  block-size: 3px;
+  transform-origin: left;
+  background: var(--color-action-bg);
+  animation: reading-progress linear both;
+  animation-timeline: scroll(root block);
+}
+
+@keyframes reading-progress {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+```
+
+```css
+.reveal {
+  opacity: 0;
+  translate: 0 2rem;
+  animation: reveal-on-view linear both;
+  animation-timeline: view(block);
+  animation-range: entry 10% cover 35%;
+}
+
+@keyframes reveal-on-view {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+```
+
+```css
+.storySection {
+  view-timeline-name: --story;
+  view-timeline-axis: block;
+}
+
+.storyImage {
+  animation: story-parallax linear both;
+  animation-timeline: --story;
+  animation-range: entry 0% exit 100%;
+}
+
+@keyframes story-parallax {
+  from { transform: translateY(8cqb) scale(1.04); }
+  to { transform: translateY(-8cqb) scale(1.04); }
+}
+```
+
+```css
+.horizontalScroller {
+  overflow-x: auto;
+  scroll-snap-type: inline mandatory;
+  scroll-timeline-name: --horizontal-progress;
+  scroll-timeline-axis: inline;
+}
+
+.horizontalProgress {
+  block-size: 2px;
+  transform-origin: left;
+  background: var(--color-action-bg);
+  animation: horizontal-progress linear both;
+  animation-timeline: --horizontal-progress;
+}
+
+@keyframes horizontal-progress {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+```
+
+## Scroll-state queries
+
+- sticky header shrink: `container-type: scroll-state` + `@container scroll-state(stuck: top)`
+- snap 中カード強調: `@container scroll-state(snapped: inline)`
+- scroll hint: `@container scroll-state(scrollable: inline)`
+
+```css
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  container-type: scroll-state;
+}
+
+.siteHeader__inner {
+  padding-block: 1rem;
+  background: Canvas;
+  transition: padding-block 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+@container scroll-state(stuck: top) {
+  .siteHeader__inner {
+    padding-block: 0.5rem;
+    background: color-mix(in oklab, Canvas 86%, transparent);
+    box-shadow: 0 1px 0 color-mix(in oklab, CanvasText 16%, transparent);
+    backdrop-filter: blur(12px);
+  }
+}
+```
+
+```css
+.rail {
+  overflow-x: auto;
+  scroll-snap-type: inline mandatory;
+  container-type: scroll-state;
+}
+
+.snapCard {
+  scroll-snap-align: center;
+  container-type: scroll-state;
+}
+
+.snapCard__inner {
+  scale: 0.94;
+  opacity: 0.72;
+  transition: scale 0.2s, opacity 0.2s;
+}
+
+@container scroll-state(snapped: inline) {
+  .snapCard__inner {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+.railHint {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+@container scroll-state(scrollable: inline) {
+  .railHint {
+    opacity: 1;
+  }
+}
+```
+
+## CSS-only carousel
+
+`scroll-snap-type` を基盤にし、対応環境では `::scroll-button()` /
+`::scroll-marker()` / `::scroll-marker-group` を使う。Anchor Positioning と組み合わせる。
+
+```css
+.carousel {
+  anchor-name: --carousel;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(18rem, 80cqi);
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline mandatory;
+  scroll-marker-group: after;
+  scrollbar-gutter: stable both-edges;
+}
+
+.carousel__item {
+  scroll-snap-align: center;
+}
+
+.carousel::scroll-button(inline-start),
+.carousel::scroll-button(inline-end) {
+  position: absolute;
+  position-anchor: --carousel;
+  align-self: anchor-center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, CanvasText 24%, transparent);
+  background: Canvas;
+  color: CanvasText;
+}
+
+.carousel::scroll-button(inline-start) {
+  content: "‹";
+  inset-inline-start: calc(anchor(left) + 0.5rem);
+}
+
+.carousel::scroll-button(inline-end) {
+  content: "›";
+  inset-inline-end: calc(100% - anchor(right) + 0.5rem);
+}
+
+.carousel::scroll-marker-group {
+  position: absolute;
+  position-anchor: --carousel;
+  justify-self: anchor-center;
+  inset-block-start: calc(anchor(bottom) + 0.75rem);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carousel__item::scroll-marker {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, CanvasText 28%, transparent);
+}
+
+.carousel__item::scroll-marker:target-current {
+  background: var(--color-action-bg);
+}
+```
+
+## Reading order / focus order
+
+Grid / Flex の visual order と DOM order がずれる場合は HTML の順序修正を優先。
+難しい場合のみ `reading-flow` / `reading-order` で補正する。
+
+```css
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  reading-flow: grid-rows;
+}
+
+.dashboardGrid__primaryAction {
+  reading-order: -1;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: row-reverse;
+  reading-flow: flex-visual;
+}
+```
+
+## Do not
+
+- scroll listener で毎フレーム style を更新する
+- 本文テキストに大きな parallax をかける
+- `prefers-reduced-motion` なしで scroll animation を導入する
+- carousel のために独自 focus management を作り込む

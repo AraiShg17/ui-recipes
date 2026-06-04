@@ -40,3 +40,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 Cloud Run へのデプロイは GitHub Actions を使います。
 
 手順: `docs/deploy-cloud-run-github-actions.md`
+
+## AI PR Review (GitHub Actions)
+
+PR 作成・更新時に Claude が diff をレビューし、コメントを投稿します。
+
+- ワークフロー: `.github/workflows/ai-review.yml`
+- プロンプト: `.github/review-prompt.txt` + `.github/ai-review/project-rules.md` + `.github/ai-review/skills/**`（AI Frontend Rules Pack）
+- リポジトリ Secrets に `ANTHROPIC_API_KEY` を設定してください
+
+## Cursor rules
+
+- Project Rules: `.cursor/rules/`（AI Frontend Rules Pack + `project-ui-recipes.mdc`）
+- Agent Skills: `.cursor/skills/`

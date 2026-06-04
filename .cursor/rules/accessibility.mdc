@@ -1,0 +1,77 @@
+---
+description: アクセシビリティ（構造・ラベル・キーボード・visually-hidden）
+alwaysApply: true
+---
+
+# Accessibility
+
+## 構造
+
+- ランドマークで区切る（過剰な `role="region"` は避ける）
+- データ表: `<table>`, `<th scope>`, `<caption>`
+- レイアウトに table を使わない
+
+## 名前
+
+- `<label for="id">` を明示
+- 同見た目の複数ボタンは visually hidden で区別
+- `placeholder` / `title` をラベル代わりにしない
+- エラー説明は `aria-describedby` で input と関連付ける
+- エラー状態は `aria-invalid="true"` を付ける
+
+## キーボード
+
+- `tabindex` 正の値禁止
+- カスタム UI: `:focus-visible`, `:focus-within`, `:has(+ input:focus-visible)`
+- モーダル: ネイティブ dialog / popover のフォーカス管理を優先
+- destructive / submit / navigation は Enter / Space / Tab の挙動を壊さない
+
+## visually-hidden
+
+```css
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+```
+
+## スタイル
+
+- 全インタラクティブ要素に `:focus-visible`
+- 非インタラクティブに hover 効果を付けない
+- 通常テキストは 4.5:1 以上、大きい文字は 3:1 以上のコントラストを目安にする
+- アイコン、入力枠、フォーカスリング、グラフなど非テキスト UI は 3:1 以上を目安にする
+- WCAG 2.2 の最小 target size は 24x24 CSS px。実装上は 44x44 CSS px を推奨
+- `@media (pointer: coarse)` では target size と間隔を広げる
+- 保存完了、エラー、toast、非同期結果は `aria-live` で通知する
+
+```html
+<label for="email">メール</label>
+<input id="email" type="email" aria-invalid="true" aria-describedby="email-error" />
+<p id="email-error">メールアドレスの形式を確認してください。</p>
+
+<p role="status" aria-live="polite" class="visually-hidden">保存しました</p>
+<p role="alert">保存に失敗しました</p>
+```
+
+```css
+.tapTarget {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+}
+
+@media (pointer: coarse) {
+  .tapTarget {
+    min-inline-size: 48px;
+    min-block-size: 48px;
+  }
+}
+```
+
+参考: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) / [MDN Accessibility](https://developer.mozilla.org/docs/Web/Accessibility)
