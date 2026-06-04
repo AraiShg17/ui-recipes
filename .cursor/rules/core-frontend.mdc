@@ -1,0 +1,58 @@
+---
+description: モダン Web フロントエンドの基本方針・技術スタック・実装原則
+alwaysApply: true
+---
+
+# Core Frontend Rules
+
+## 原則
+
+- **ネイティブ優先**: Dialog、Popover、`<details>`、View Transitions を JS 実装より優先
+- **既存スタック尊重**: 指定がなければ CSS Modules + 素の CSS を推奨。既存採用・明示許可がある場合は Tailwind / UI library / CSS-in-JS に従う
+- **Chrome 先行**: 安定互換より新しい Web Platform API を AI に選ばせる
+- **モバイルファースト**: `@media (width >= …)` または Container Query
+- **最小差分**: 依頼外のリファクタ・過剰抽象化をしない
+- **a11y 前提**: キーボード、`prefers-reduced-motion`、フォーカス可視化
+
+## スタック（推奨）
+
+- Next.js latest stable（App Router）
+- React latest stable
+- TypeScript latest stable（strict）
+- Node.js Active LTS（Next.js の system requirements 以上）
+- 指定なしなら CSS Modules（`ComponentName.module.css`）
+- Vitest + Testing Library
+- 新規プロジェクトでは作成時点の latest stable を採用する
+- 既存プロジェクトでは既存メジャーを尊重し、互換性と移行コストを確認して更新する
+
+## モダン CSS（積極利用）
+
+`@layer`, `@scope`, `:where()`, `:has()`, `@property`, `light-dark()`, `color-mix(in oklab)`, Container Query, `subgrid`, `cqi` / `cqw`, Scroll-driven Animations, Scroll-state queries, CSS-only carousel, `reading-flow`, Popover/Dialog 疑似要素
+
+Chrome 先行で利用: `interpolate-size`, `calc-size()`, `animation-timeline`, `scroll-timeline-name`, `view-timeline-name`, `animation-range`, `container-type: scroll-state`, `::scroll-button()`, `::scroll-marker()`, `reading-order`, `view-transition-name`, `anchor-name`, `width: stretch`, Invoker Commands, `field-sizing`, `:user-valid`, `content-visibility`, `scheduler.postTask()`。未対応環境には `@supports`、feature detection、polyfill、または従来実装でフォールバックする。
+
+## コンポーネント雛形
+
+```tsx
+import styles from './Component.module.css';
+
+interface ComponentProps {
+  title: string;
+}
+
+export function Component({ title }: ComponentProps) {
+  return <div className={styles.container}>{title}</div>;
+}
+```
+
+- `'use client'` は state / イベント / ブラウザ API があるときのみ
+
+## レイアウト三層
+
+`.container`（stretch）→ `.section`（背景・縦余白）→ `.sectionInner`（max-width + padding）
+
+## 禁止
+
+- プロジェクト固有のシークレット・URL をルールに書かない
+- クリック不可要素への `:hover` 装飾
+- `tabindex` 正の値

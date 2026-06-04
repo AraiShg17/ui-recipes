@@ -1,0 +1,152 @@
+---
+description: コンポーネント単位ディレクトリ・Hooks/API の配置ルール
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Directory Structure
+
+## 思想
+
+Next.js App Router では **routing と feature ownership を分ける**。`app/` は URL・layout・metadata・loading/error 境界を持つ薄い層にし、実体は `features/`、共有 UI は `components/`、共有ロジックは `lib/` に置く。
+
+## トップレベル（例）
+
+```
+/app          # routes, layouts, loading/error, metadata
+/features     # domain/feature owned UI + hooks + server actions
+/components   # shared, domain-free UI
+/lib          # shared utilities, data clients, validators
+/public
+/styles       # globals.css
+```
+
+## Next.js App Router
+
+- `page.tsx` は薄い composition layer。大きな UI や状態管理を書かない
+- `layout.tsx` は shell / provider / navigation 境界
+- `loading.tsx` / `error.tsx` / `not-found.tsx` は route 近くに置く
+- Route Group `(marketing)` / `(app)` / `(auth)` で URL に出さない構造境界を作る
+- Private Folder `_components` / `_lib` / `_actions` は route 専用で外部 import しない
+- Server Component をデフォルト。`'use client'` は leaf component へ押し込む
+
+## Parallel Routes
+
+Parallel Routes は、同一 layout 内で複数領域を独立した route slot として扱う必要がある場合だけ使う。
+単なる左右分割、dashboard card の配置、通常の component composition には使わない。
+
+使う価値がある例:
+
+- 一覧 + URL を持つ詳細 modal / side panel
+- dashboard の main / activity / analytics が独立して loading / error を持つ
+- role や segment によって同じ layout 内の領域を大きく出し分ける
+- Intercepting Routes と組み合わせて、戻る操作に強い modal を作る
+
+使う場合:
+
+- slot は `@activity` / `@analytics` のように意図が分かる名前にする
+- 各 slot に `default.tsx` を用意し、hard navigation / refresh 時の fallback を明示する
+- 必要に応じて slot 単位で `loading.tsx` / `error.tsx` を置く
+- slot 間で密結合する state は避け、共有が必要なら URL / server data / 明示的な client state に寄せる
+
+```txt
+app/(app)/dashboard/
+  layout.tsx
+  page.tsx
+  @activity/
+    page.tsx
+    default.tsx
+    loading.tsx
+    error.tsx
+  @analytics/
+    page.tsx
+    default.tsx
+```
+
+## NG
+
+```
+/hooks/useCard.ts      # Card 専用なのにトップレベル
+/api/submitForm.ts     # Form 専用なのにトップレベル
+/app/dashboard/page.tsx # UI・状態・fetch を直書き
+/components/UserBillingCard # billing feature 専用なのに共有 components
+```
+
+## OK
+
+```
+/app/(app)/dashboard/page.tsx
+/app/(app)/dashboard/loading.tsx
+/app/(app)/dashboard/error.tsx
+
+/features/dashboard/
+  DashboardContainer.tsx
+  DashboardView.tsx
+  DashboardView.module.css
+  actions/updateDashboard.ts
+  api/fetchDashboard.ts
+  hooks/useDashboardFilters.ts
+  types.ts
+
+/components/Card/
+  Card.tsx
+  Card.module.css
+  types.ts
+```
+
+## Container / Presentation
+
+データ取得・権限・URL 解釈・状態更新と、HTML/CSS の描画責務は分ける。
+目的はテストしやすさ、差し替えやすさ、AI が UI とビジネスロジックを混ぜないこと。
+単純な静的 UI まで機械的に分割しないが、データ取得や状態更新を持つ feature は
+container / presentation の境界を作る。
+
+| 層 | 役割 | 置き場所 |
+|----|------|----------|
+| Route | URL、metadata、layout 境界、feature 呼び出し | `app/**/page.tsx` |
+| Container | fetch、Server Action 接続、権限、URL params 解釈 | `features/name/NameContainer.tsx` |
+| Presentation | props を受け取り HTML/CSS を描画 | `features/name/NameView.tsx` |
+| Shared UI | domain を知らない再利用 UI | `components/` |
+| Shared infra | data client、schema、format、権限 helper | `lib/` |
+
+```tsx
+// app/(app)/dashboard/page.tsx
+import { DashboardContainer } from '@/features/dashboard/DashboardContainer';
+
+export default function Page() {
+  return <DashboardContainer />;
+}
+```
+
+```tsx
+// features/dashboard/DashboardContainer.tsx
+import { fetchDashboard } from './api/fetchDashboard';
+import { DashboardView } from './DashboardView';
+
+export async function DashboardContainer() {
+  const data = await fetchDashboard();
+  return <DashboardView data={data} />;
+}
+```
+
+Presentation は渡された props を表示し、ユーザー操作を callback として返す。
+`fetch()`、DB client、cookie/session、Server Action 実装、権限判定、URL params 解釈を直接持たない。
+
+## 判断フロー
+
+1. 特定コンポーネント専用 → `ComponentName/` 内（`hooks/`, `api/`, `types.ts`）
+2. 単一 feature 専用 → `features/name/`
+3. 複数 feature 共有だが domain を含む → domain module / `features/shared-*`
+4. domain-free UI → `components/`
+5. 汎用ロジック → `lib/`
+6. URL 境界 → `app/`
+
+## コンポーネントファイル
+
+```
+ComponentName/
+  ComponentName.tsx
+  ComponentName.module.css
+```
+
+複雑な場合のみ同フォルダに `README.md`。

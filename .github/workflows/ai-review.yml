@@ -1,0 +1,104 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        run: |
+          set -euo pipefail
+          git diff "${{ github.event.pull_request.base.sha }}"..."${{ github.event.pull_request.head.sha }}" > /tmp/pr.diff
+          DIFF_LIMIT=100000
+          head -c "$DIFF_LIMIT" /tmp/pr.diff > /tmp/pr_trimmed.diff
+          FULL_SIZE=$(wc -c < /tmp/pr.diff | tr -d ' ')
+          TRIM_SIZE=$(wc -c < /tmp/pr_trimmed.diff | tr -d ' ')
+          if [ "$TRIM_SIZE" -lt "$FULL_SIZE" ]; then
+            echo "PR diff truncated: ${TRIM_SIZE}/${FULL_SIZE} bytes (limit ${DIFF_LIMIT})"
+          fi
+
+      - name: Build review system prompt
+        run: |
+          set -euo pipefail
+          {
+            cat .github/review-prompt.txt
+            echo ""
+            echo "---"
+            echo ""
+            cat .github/ai-review/project-rules.md
+            echo ""
+            echo "---"
+            echo ""
+            echo "# 実装ルール（AI Frontend Rules Pack / Claude Skills）"
+            echo ""
+            find .github/ai-review/skills -type f \( -name 'SKILL.md' -o -name 'reference-css.md' \) | sort | while read -r f; do
+              echo "## $(basename "$(dirname "$f")")/$(basename "$f")"
+              cat "$f"
+              echo ""
+            done
+          } > /tmp/review-system-prompt.txt
+          # API の system 枠を超えないよう上限（約 80KB）
+          head -c 80000 /tmp/review-system-prompt.txt > /tmp/review-system-prompt-trimmed.txt
+          wc -c /tmp/review-system-prompt-trimmed.txt
+
+      - name: Run AI Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "ANTHROPIC_API_KEY が未設定のためスキップします。"
+            exit 0
+          fi
+
+          DIFF=$(cat /tmp/pr_trimmed.diff)
+          if [ -z "$DIFF" ]; then
+            echo "差分がないためスキップ"
+            exit 0
+          fi
+
+          SYSTEM_PROMPT=$(cat /tmp/review-system-prompt-trimmed.txt)
+          RESPONSE=$(jq -n --arg system "$SYSTEM_PROMPT" --arg diff "$DIFF" \
+            '{model:"claude-sonnet-4-5",max_tokens:2000,system:$system,messages:[{role:"user",content:("以下のPR diffをレビューしてください:\n```diff\n"+$diff+"\n```")}]}' \
+            | curl -sS https://api.anthropic.com/v1/messages \
+              -H "x-api-key: $ANTHROPIC_API_KEY" \
+              -H "anthropic-version: 2023-06-01" \
+              -H "content-type: application/json" \
+              -d @-)
+
+          echo "=== API Response (metadata) ==="
+          echo "$RESPONSE" | jq '{type, model, role: .role, stop_reason, usage, error}'
+
+          if echo "$RESPONSE" | jq -e '.error' >/dev/null 2>&1; then
+            echo "Anthropic API エラー"
+            exit 1
+          fi
+
+          REVIEW=$(echo "$RESPONSE" | jq -r '.content[0].text // empty')
+          if [ -z "$REVIEW" ]; then
+            REVIEW="レビューの取得に失敗しました。Actions ログを確認してください。"
+          fi
+
+          jq -n --arg r "$REVIEW" \
+            '{"body":("## 🤖 AI コードレビュー\n\n"+$r+"\n\n---\n*Powered by Claude Sonnet · ui-recipes · AI Frontend Rules Pack*")}' \
+            | curl -sS -X POST \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Content-Type: application/json" \
+              "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments" \
+              -d @-

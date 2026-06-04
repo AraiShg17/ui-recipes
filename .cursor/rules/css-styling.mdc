@@ -1,0 +1,248 @@
+---
+description: CSS Modules・色・BEM・レスポンシブ・フォーカススタイル
+globs: "**/*.css"
+alwaysApply: false
+---
+
+# CSS Styling
+
+## グローバル（`:root` / `body`）
+
+```css
+@layer reset, base, theme, components, utilities;
+
+:root {
+  color-scheme: light dark;
+  interpolate-size: allow-keywords;
+
+  /* raw palette */
+  --blue-500: #3b82f6;
+  --white: #ffffff;
+  --gray-900: #111827;
+  --slate-50: #f8fafc;
+  --slate-900: #0f172a;
+
+  /* semantic tokens */
+  --color-surface: light-dark(var(--white), var(--slate-900));
+  --color-text: light-dark(var(--gray-900), var(--slate-50));
+  --color-action-bg: var(--blue-500);
+
+  --duration-default: 0.2s;
+}
+body {
+  color: var(--color-text);
+  background: var(--color-surface);
+  text-autospace: normal;
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .trimmedText {
+    text-box: trim-both cap alphabetic;
+  }
+}
+img { vertical-align: top; }
+```
+
+`env(safe-area-inset-*)` は端末の安全領域（ノッチ、Dynamic Island、ホームインジケーター等）を読むために使う。
+`body` 全体へ一律に入れず、full-bleed な app shell、fixed header / footer、bottom nav など、画面端に張り付く UI に限定する。
+
+```css
+.appShell {
+  min-block-size: 100dvb;
+  padding-block-start: max(1rem, env(safe-area-inset-top));
+  padding-inline: max(1rem, env(safe-area-inset-left))
+    max(1rem, env(safe-area-inset-right));
+}
+
+.bottomNav {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  padding-block-end: max(0.75rem, env(safe-area-inset-bottom));
+}
+```
+
+## 色
+
+- デザイントークンは CSS 変数 + 6 桁 HEX を基本にする
+- 半透明: `color-mix(in oklab, var(--color-action-bg) 80%, transparent)` を優先。既存コード互換や必要がある場合は `rgb()` / `rgba()` も許容
+- ダーク: `light-dark(var(--light), var(--dark))`
+- ブラウザ生成 UI も含めて `color-scheme: light dark`
+- High Contrast には `@media (forced-colors: active)` と system colors
+- グラデ: `linear-gradient(… in oklab, …)`
+
+## CSS 変数 / Design Tokens
+
+- CSS custom property は必ず `--` で始める（例: `--color-action-bg`）。参照は `var(--color-action-bg)`
+- 命名は kebab-case。色・余白・角丸・時間などのカテゴリを prefix に含める
+- token は raw palette → semantic token → component token の順に参照する
+- raw palette は `:root` に定義し、使える色の範囲を制限する
+- semantic token は raw palette を意味づけする（例: `--color-action-bg`, `--color-surface`）
+- component token は component root に定義し、semantic token を参照する
+- component の実プロパティでは raw palette を直接参照せず、semantic / component token を使う
+- 見た目の種類・状態・密度など、意味のある変更は props / `data-*` で明示する
+- CSS 変数は主に component 内部 token として使い、内部用は `--_private-token` にする
+- どうしても外部から数値・色を渡す必要がある場合だけ、typed `style` で許可した CSS 変数を渡す
+- CSS Modules では利用側CSSから内部 class を狙わない。`className` による CSS 変数注入を標準パターンにしない
+- animatable token は `@property` で型定義してから transition する
+
+命名例:
+
+- raw palette: `--blue-500`, `--slate-900`
+- semantic color: `--color-surface`, `--color-text`, `--color-action-bg`
+- scale token: `--space-4`, `--radius-md`, `--duration-default`
+- component private token: `--_card-padding`, `--_card-border`
+
+```css
+:root {
+  --blue-500: #2563eb;
+  --blue-700: #1d4ed8;
+  --gray-50: #f9fafb;
+  --gray-900: #111827;
+
+  --color-surface: var(--gray-50);
+  --color-text: var(--gray-900);
+  --color-action-bg: var(--blue-500);
+  --color-action-bg-hover: var(--blue-700);
+}
+
+@property --_card-accent-mix {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.card {
+  --_card-density: 1;
+  --_card-accent: var(--color-action-bg);
+  --_card-padding: calc(1rem * var(--_card-density));
+  --_card-border: color-mix(in oklab, var(--_card-accent) var(--_card-accent-mix), transparent);
+
+  padding: var(--_card-padding);
+  border: 1px solid var(--_card-border);
+  transition: --_card-accent-mix 0.2s;
+}
+
+.card:has(.card__action:focus-visible) {
+  --_card-accent-mix: 42%;
+}
+
+.card[data-density='compact'] {
+  --_card-density: 0.75;
+}
+```
+
+## 幅
+
+`width: 100%` を基本にし、対応環境では `width: stretch`（`-webkit-fill-available` 等）を検討する。
+
+## レスポンシブ
+
+- コンポーネント内部の responsive layout は Container Query を原則にする
+- `@media` は viewport、OS 設定、入力デバイスなど page/global 条件に限定する
+- component root に `container-type: inline-size` と必要なら `container-name` を付ける
+- `cqi` / `cqb` / `cqmin` / `cqmax` を使い、配置場所に依存しない UI にする
+
+| 条件 | 使うもの |
+|------|----------|
+| component 自身の幅で layout を変える | `@container` |
+| component 内部の余白・文字・gap を自分の幅に連動 | `cqi` / `cqb` |
+| viewport 全体・OS 設定・入力環境 | `@media` |
+| sticky / snap / scrollable など scroll 状態 | `container-type: scroll-state` |
+
+`cqi` は container inline size の 1%、`cqb` は container block size の 1%。
+
+```css
+.productCard {
+  container-type: inline-size;
+  container-name: product-card;
+  padding: clamp(0.75rem, 4cqi, 1.25rem);
+}
+
+.productCard__body {
+  display: grid;
+  gap: clamp(0.5rem, 2cqi, 1rem);
+}
+
+@container product-card (width >= 36rem) {
+  .productCard__body {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+```
+
+```css
+.toolbar {
+  container-type: inline-size;
+  gap: clamp(0.375rem, 2cqi, 1rem);
+}
+
+.toolbar__label {
+  font-size: clamp(0.875rem, 3cqi, 1rem);
+}
+
+@media (pointer: coarse) {
+  .toolbar__button {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+}
+```
+
+## BEM + CSS Modules
+
+- Block = ファイル名（`Card.module.css` → `.card`）
+- `.card__title`, `.cardHeader`, `.card--featured`
+- 子孫セレクタ禁止（`.card .title` → `.card__title`）
+- `:hover`, `@media`, `@container` はクラス内ネスト
+- `@keyframes`, `@supports` はクラス外
+- 低詳細度の土台は `:where()`、親状態は `:has()`、近接範囲は `@scope`
+- Cascade は `@layer reset, base, theme, components, utilities;` で順序を固定
+
+```css
+@layer components {
+  @scope (.card) {
+    :scope {
+      container-type: inline-size;
+    }
+    .card__title:where(:not(:empty)) {
+      text-wrap: balance;
+    }
+    :scope:has(.card__media) {
+      display: grid;
+    }
+  }
+}
+```
+
+## フォーカス・モーション
+
+```css
+.button:focus-visible {
+  outline: 2px solid var(--color-action-bg);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+@media (forced-colors: active) {
+  .button {
+    border: 1px solid ButtonText;
+    color: ButtonText;
+  }
+}
+@media (pointer: coarse) {
+  .button {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+}
+```
+
+## アニメーション変数
+
+`@property` で宣言してから `transition` する。
+
+## リンク
+
+`<a>` スタイルは `globals.css` で一元管理（例外: ボタン風リンクのみ上書き）。

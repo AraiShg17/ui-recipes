@@ -1,0 +1,71 @@
+---
+description: レイアウト破綻防止（safe center・isolation・contain）
+globs: "**/*.css"
+alwaysApply: false
+---
+
+# CSS Layout Safety
+
+## 必須
+
+```css
+.modalInner {
+  justify-content: safe center;
+  align-items: safe center;
+}
+.modal {
+  isolation: isolate;
+  overscroll-behavior: contain;
+}
+```
+
+## 推奨
+
+- `safe center` はスクロール可能なモーダル・オーバーレイで使う
+- `contain: layout paint` — リスト・カードグリッド（**sticky 要素には付けない**）
+- `overflow: clip` — アニメーションのはみ出しカット（**スクロール領域には使わない**）
+- Grid 内部は `subgrid` を優先して親の列・行に揃える
+- コンポーネント幅に応じる値は `cqi` / `cqb` を使う
+- 画面外の重い領域は `content-visibility: auto` + `contain-intrinsic-size`
+
+## 禁止
+
+- スクロール可能なモーダル・オーバーレイでの `justify-content: center` 単体
+- sticky の挙動に影響する祖先への不用意な `isolation` / `contain`
+- モーダル最上位への `isolation` 付け忘れ
+
+## モーダル安全セット
+
+```css
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: safe center;
+  align-items: safe center;
+  isolation: isolate;
+  contain: paint;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+```
+
+```css
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+.card {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: span 12;
+  container-type: inline-size;
+}
+.cardTitle {
+  font-size: clamp(1rem, 4cqi, 1.5rem);
+}
+.heavySection {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+```

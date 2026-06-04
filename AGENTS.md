@@ -13,6 +13,12 @@ These instructions apply to all tasks unless a more specific instruction file is
 - Avoid destructive operations unless explicitly requested.
 - Document non-obvious decisions in PR descriptions or commit messages.
 
+## Cursor / Claude rules (AI Frontend Rules Pack)
+
+- **Cursor Project Rules**: `.cursor/rules/*.mdc`（`AI Frontend Rules Pack` からコピー + `project-ui-recipes.mdc`）
+- **Cursor Agent Skills**: `.cursor/skills/frontend-*`（Claude Code 用スキルと同内容）
+- **PR AI レビュー**: `.github/workflows/ai-review.yml` が `.github/ai-review/skills/` の SKILL をプロンプトに含める
+
 ## Required Pre-Read
 Before implementing any task, read the rule files in `agent/` and follow them.
 

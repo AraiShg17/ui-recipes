@@ -1,0 +1,70 @@
+---
+description: フロントエンドセキュリティ（env・DOM・Cookie・postMessage）
+globs: "**/*.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+# Frontend Security
+
+## シークレット / 環境変数
+
+- ローカル: `.env.local`（gitignore）
+- 本番: シークレットマネージャー等
+- `.env.example` はキー名だけ。実値、社内 URL、顧客名を書かない
+- **禁止**: `.env*` コミット、コード内ハードコード、`console.log(secret)`
+- Secret 例: API key、DB URL、OAuth client secret、JWT secret、管理 token、private URL、顧客名、社内 ID
+- Next.js: `NEXT_PUBLIC_` はブラウザ公開。secret には絶対に付けない
+- Secret は Server Component / Server Action / Route Handler / server-only module だけで読む
+- Client Component props、browser bundle、analytics、error reporting に secret を渡さない
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://api.example.com # OK
+NEXT_PUBLIC_ADMIN_TOKEN=xxx                      # NG
+DATABASE_URL=postgres://...                      # server-only
+```
+
+## Secret scan
+
+- `rg -n "sk_live|secret|token|password|api[_-]?key|DATABASE_URL|PRIVATE_KEY|BEGIN .*PRIVATE KEY" .`
+- `.gitignore` に `.env*` を含め、必要なら `!.env.example` だけ許可
+- AI prompt / rules / sample code には dummy 値だけを書く
+
+## DOM
+
+- 未信頼入力 → React text rendering / `textContent` / sanitizer
+- 未信頼入力: ユーザー入力、CMS本文、Markdown変換結果、外部 API、URL params、query string
+- 避ける: `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `eval`, `new Function`, `document.write`, 文字列 `setTimeout`
+- `dangerouslySetInnerHTML` は sanitize 済みHTMLだけ。変数名は `sanitizedHtml` のようにする
+- `javascript:` URL、未検証 redirect URL を使わない
+
+```tsx
+<p>{userInput}</p> // OK
+<div dangerouslySetInnerHTML={{ __html: userInput }} /> // NG
+<div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} /> // 条件付きOK
+```
+
+## Cookie（新規）
+
+```
+Set-Cookie: __Host-session=…; Path=/; Secure; HttpOnly; SameSite=Lax
+```
+
+- session cookie は `HttpOnly`
+- cross-site が不要なら `SameSite=Lax` または `Strict`
+- `localStorage` に access token / refresh token / session secret を保存しない
+
+## ヘッダー（段階導入）
+
+HTTPS → HSTS（短い max-age から）→ `frame-ancestors` / X-Frame-Options → CSP Report-Only → Enforcement
+
+## postMessage
+
+```js
+if (event.origin !== 'https://trusted.example') return;
+target.postMessage(data, 'https://trusted.example');
+```
+
+- `origin` と payload schema を検証
+- 機密 payload に `*` を使わない
+
+参考: [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) / [MDN Web Security](https://developer.mozilla.org/docs/Web/Security)

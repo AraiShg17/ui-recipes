@@ -1,0 +1,45 @@
+---
+description: HTML セマンティクス・フォーム・画像・ランドマーク
+globs: "**/*.{tsx,html,jsx}"
+alwaysApply: false
+---
+
+# HTML Semantics
+
+## DO
+
+- `<html lang="…">`, viewport meta, 単一 `<main>`
+- 見出し `h1`–`h6` は順序を飛ばさない
+- `<header>`, `<nav>`, `<footer>`, `<section>`, `<article>`, `<search>`
+- アクション: `<button type="button">` / 遷移: `<a href>`
+- LCP 画像: `fetchpriority="high"` + `width`/`height`
+- 画面外: `loading="lazy"`
+- 装飾: `alt=""` / SVG `aria-hidden="true"`
+
+## DON'T
+
+- `<div role="button">` で代替
+- フォーカス可能要素に `aria-hidden="true"`
+- 認証・住所・決済で安易な `autocomplete="off"`
+
+## オーバーレイ選定
+
+| 用途 | API |
+|------|-----|
+| 重要・必須 UI | `<dialog>` + `showModal()` |
+| メニュー・ツールチップ | `[popover]` |
+| FAQ・インライン | `<details>` / `<summary>` |
+
+## スキップリンク
+
+```html
+<a href="#main" class="skip-link">メインへ</a>
+<main id="main" tabindex="-1">
+```
+
+## フォーム
+
+- `form="id"` で DOM 外 input を関連付け
+- `current-password` / `new-password` を用途に合わせる
+
+参考: [MDN HTML](https://developer.mozilla.org/docs/Web/HTML)
