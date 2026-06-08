@@ -158,6 +158,219 @@
   min-width: 4.5rem;
 }
 
+/* ---- アニメーションサンプル ---- */
+.animSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 52rem;
+  padding-block-start: 0.5rem;
+}
+
+.animLead {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  opacity: 0.88;
+}
+
+.animGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.animCard {
+  --anim-border: light-dark(#c5cedd, #3d4f6e);
+  --anim-accent: light-dark(#3b6fd4, #6b9fff);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid light-dark(var(--app-border-light), var(--app-border-dark));
+  background: light-dark(var(--app-surface-light), var(--app-surface-dark));
+}
+
+.animCardTitle {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.animCardHint {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  opacity: 0.72;
+}
+
+.animBoard {
+  --anim-gap: 14px;
+
+  display: grid;
+  gap: var(--anim-gap);
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: light-dark(#f6f8fc, #121c2e);
+}
+
+.animColorGrid {
+  grid-template-columns: repeat(3, 1fr);
+  rule: 1px solid var(--anim-border);
+  transition: rule-color 220ms ease;
+}
+
+.animColorGrid:hover,
+.animColorGrid:focus-within {
+  rule-color: var(--anim-accent);
+}
+
+.animInsetGrid {
+  grid-template-columns: repeat(3, 1fr);
+  rule: 2px solid var(--anim-border);
+  rule-inset: 10px;
+  transition:
+    rule-inset 260ms ease,
+    rule-color 260ms ease;
+}
+
+.animInsetGrid:hover,
+.animInsetGrid:focus-within {
+  rule-inset: 0;
+  rule-color: var(--anim-accent);
+}
+
+.animCalendarGrid {
+  --anim-gap: 12px;
+
+  grid-template-columns: repeat(7, 1fr);
+  column-rule: 2px solid var(--anim-border);
+  row-rule: 2px solid var(--anim-border);
+  rule-break: intersection;
+  /* 端は gap いっぱい、交点だけ内側に寄せる（Chrome dashboard パターン） */
+  rule-inset-cap: 0;
+  rule-inset-junction: 12px;
+  transition:
+    rule-inset-junction 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    rule-color 320ms ease;
+}
+
+.animCalendarGrid:hover,
+.animCalendarGrid:focus-within {
+  rule-inset-junction: 0;
+  rule-color: var(--anim-accent);
+  column-rule-color: var(--anim-accent);
+  row-rule-color: var(--anim-accent);
+}
+
+.animWidthGrid {
+  grid-template-columns: repeat(2, 1fr);
+  rule: 1px solid var(--anim-border);
+  transition:
+    rule-width 240ms ease,
+    rule-color 240ms ease;
+}
+
+.animWidthGrid:hover,
+.animWidthGrid:focus-within {
+  rule-width: 3px;
+  rule-color: var(--anim-accent);
+}
+
+.animCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: light-dark(#eef2f8, #1a2438);
+  border: 1px solid light-dark(#d8e0ef, #2d3d5c);
+}
+
+.animCellSmall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.75rem;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: light-dark(#eef2f8, #1a2438);
+  border: 1px solid light-dark(#d8e0ef, #2d3d5c);
+}
+
+/* 1カード下の row-rule だけ — 端（cap）を内側に寄せて中央から左右へ伸ばす */
+.animTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.animRowRule {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 10px;
+  gap: 18px;
+  row-rule: 2px solid var(--anim-border);
+  /* 1列グリッドの横線は交点ではなく cap 端。% より px の方が安定 */
+  rule-inset-cap: 36px;
+  rule-visibility-items: all;
+  padding-block-end: 0.15rem;
+  transition:
+    rule-inset-cap 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    row-rule-color 320ms ease;
+  outline: none;
+  border-radius: 6px;
+}
+
+.animRowRule:hover,
+.animRowRule:focus-visible {
+  rule-inset-cap: 0;
+  row-rule-color: var(--anim-accent);
+}
+
+.animRowCard {
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: light-dark(#eef2f8, #1a2438);
+  border: 1px solid light-dark(#d8e0ef, #2d3d5c);
+}
+
+.animRowSpacer {
+  /* 2行目のグリッドアイテム（空でも gap + row-rule を出す） */
+  min-block-size: 10px;
+  pointer-events: none;
+}
+
+@supports not (rule-inset-cap: 1px) {
+  .animCalendarGrid,
+  .animRowRule {
+    outline: 1px dashed light-dark(#c5cedd, #4a5a75);
+    outline-offset: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animColorGrid,
+  .animInsetGrid,
+  .animCalendarGrid,
+  .animWidthGrid,
+  .animRowRule {
+    transition: none;
+  }
+}
+
 .propsGuide {
   display: flex;
   flex-direction: column;
