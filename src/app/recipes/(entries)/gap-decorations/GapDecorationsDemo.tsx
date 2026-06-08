@@ -231,6 +231,113 @@ export function GapDecorationsDemo() {
         ))}
       </div>
 
+      <section
+        className={styles.animSection}
+        aria-labelledby="gap-anim-title"
+      >
+        <h2 id="gap-anim-title" className={styles.guideTitle}>
+          アニメーション（rule-color / rule-inset）
+        </h2>
+        <p className={styles.animLead}>
+          <code>rule-color</code>・<code>rule-width</code>・<code>rule-inset</code>{" "}
+          などは transition 可能です（Chrome 149+）。各サンプルにホバー／フォーカスしてみてください。
+        </p>
+
+        <div className={styles.animGrid}>
+          <article className={styles.animCard}>
+            <h3 className={styles.animCardTitle}>グリッド全体 — 色だけ変える</h3>
+            <p className={styles.animCardHint}>
+              <code>transition: rule-color</code>
+            </p>
+            <div
+              className={`${styles.animBoard} ${styles.animColorGrid}`}
+              aria-label="ホバーで区切り線の色が変わるグリッド"
+            >
+              {["A", "B", "C", "D", "E", "F"].map((label) => (
+                <div key={label} className={styles.animCell}>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.animCard}>
+            <h3 className={styles.animCardTitle}>グリッド全体 — 線が伸びる</h3>
+            <p className={styles.animCardHint}>
+              <code>rule-inset: 10px → 0</code>
+            </p>
+            <div
+              className={`${styles.animBoard} ${styles.animInsetGrid}`}
+              aria-label="ホバーで区切り線が gap 端まで伸びるグリッド"
+            >
+              {["1", "2", "3", "4", "5", "6"].map((label) => (
+                <div key={label} className={styles.animCell}>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.animCard}>
+            <h3 className={styles.animCardTitle}>カレンダー — 交点がつながる</h3>
+            <p className={styles.animCardHint}>
+              <code>rule-inset-cap: 0</code> +{" "}
+              <code>rule-inset-junction: 12px → 0</code>（3行以上の格子で交点が見える）
+            </p>
+            <div
+              className={`${styles.animBoard} ${styles.animCalendarGrid}`}
+              aria-label="ホバーで交点付近の線が接続するカレンダーグリッド"
+            >
+              {Array.from({ length: 21 }, (_, i) => (
+                <div key={i} className={styles.animCellSmall}>
+                  {i + 1}
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.animCard}>
+            <h3 className={styles.animCardTitle}>
+              行ごと — ホバーしたカードの下だけ
+            </h3>
+            <p className={styles.animCardHint}>
+              mini grid（2行）の <code>row-rule</code> +
+              <code>rule-inset-cap</code>（端を内側へ）。交点用の junction ではない。
+            </p>
+            <div className={styles.animTimeline} role="list">
+              {["Inbox", "Drafts", "Archive", "Trash"].map((label) => (
+                <div
+                  key={label}
+                  className={styles.animRowRule}
+                  role="listitem"
+                  tabIndex={0}
+                >
+                  <div className={styles.animRowCard}>{label}</div>
+                  <div className={styles.animRowSpacer} aria-hidden />
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.animCard}>
+            <h3 className={styles.animCardTitle}>太さも変える</h3>
+            <p className={styles.animCardHint}>
+              <code>rule-width: 1px → 3px</code> + 色
+            </p>
+            <div
+              className={`${styles.animBoard} ${styles.animWidthGrid}`}
+              aria-label="ホバーで区切り線が太くなるグリッド"
+            >
+              {["α", "β", "γ", "δ"].map((label) => (
+                <div key={label} className={styles.animCell}>
+                  {label}
+                </div>
+              ))}
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section className={styles.propsGuide} aria-labelledby="gap-props-title">
         <h2 id="gap-props-title" className={styles.guideTitle}>
           主なプロパティ（軽い解説）
@@ -287,13 +394,31 @@ export function GapDecorationsDemo() {
           </div>
           <div className={styles.propsItem}>
             <dt>
-              <code>rule-inset</code> ほか
+              <code>rule-inset-cap</code> / <code>rule-inset-junction</code>
             </dt>
             <dd>
-              gap 内で線を短くしたり端を揃えたりする。{" "}
-              <code>rule-visibility-items</code>（<code>all</code> /{" "}
-              <code>between</code> など）で「隣接アイテムがある gap
-              だけ」も指定できる。
+              <code>rule-inset-cap</code> は線の端（T字の先端）を内側に寄せる。1列リストの
+              下線はこちら。<code>rule-inset-junction</code> は十字の交点だけ。
+              カレンダーは <code>cap: 0</code> + <code>junction</code> の組み合わせ。
+            </dd>
+          </div>
+          <div className={styles.propsItem}>
+            <dt>
+              <code>transition: rule-color</code> ほか
+            </dt>
+            <dd>
+              <code>rule-color</code>・<code>rule-width</code>・
+              <code>rule-inset</code> はアニメーション可能。グリッドの区切り線そのものを
+              hover で強調できる（装飾的 enhancement）。
+            </dd>
+          </div>
+          <div className={styles.propsItem}>
+            <dt>
+              <code>rule-visibility-items</code>
+            </dt>
+            <dd>
+              <code>all</code> / <code>around</code> / <code>between</code>{" "}
+              で線を出す gap を制御。
             </dd>
           </div>
           <div className={styles.propsItem}>
