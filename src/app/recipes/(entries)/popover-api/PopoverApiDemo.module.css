@@ -1,0 +1,146 @@
+.wrap {
+  display: grid;
+  place-items: safe center;
+  min-block-size: 220px;
+}
+
+.trigger,
+.hintButton,
+.closeButton {
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.trigger,
+.hintButton {
+  min-block-size: 2.5rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #17243a);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.trigger:hover,
+.hintButton:hover {
+  background: light-dark(#eef4ff, #203452);
+}
+
+.menu,
+.hint {
+  border: none;
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  isolation: isolate;
+}
+
+.menu {
+  position: fixed;
+  inset: unset;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  inline-size: min(90vw, 360px);
+  padding: 1rem;
+  border-radius: 8px;
+  background: light-dark(#ffffff, #111d31);
+  box-shadow: 0 20px 48px color-mix(in oklab, #000000 28%, transparent);
+}
+
+.menu::backdrop {
+  background: color-mix(in oklab, #000000 36%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.menuHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.menuHeader h2,
+.menu p {
+  margin: 0;
+}
+
+.menuHeader h2 {
+  font-size: 1.05rem;
+}
+
+.menu p {
+  margin-block: 0.8rem 1rem;
+  line-height: 1.7;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: none;
+  background: light-dark(#eef4ff, #203452);
+  color: inherit;
+}
+
+.hint {
+  position: fixed;
+  inset: auto 1rem 1rem auto;
+  max-inline-size: min(80vw, 280px);
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: light-dark(#10214a, #e7efff);
+  color: light-dark(#ffffff, #10214a);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.6;
+  box-shadow: 0 16px 32px color-mix(in oklab, #000000 24%, transparent);
+}
+
+.menu[popover],
+.hint[popover] {
+  opacity: 0;
+  scale: 0.96;
+  transition:
+    opacity 220ms var(--theme-transition-easing),
+    scale 220ms var(--theme-transition-easing),
+    overlay 220ms allow-discrete,
+    display 220ms allow-discrete;
+}
+
+.menu[popover]:popover-open,
+.hint[popover]:popover-open {
+  opacity: 1;
+  scale: 1;
+}
+
+@starting-style {
+  .menu[popover]:popover-open,
+  .hint[popover]:popover-open {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.menu[popover]::backdrop {
+  opacity: 0;
+  transition:
+    opacity 220ms var(--theme-transition-easing),
+    overlay 220ms allow-discrete,
+    display 220ms allow-discrete;
+}
+
+.menu[popover]:popover-open::backdrop {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu[popover],
+  .hint[popover],
+  .menu[popover]::backdrop {
+    transition: none;
+  }
+}

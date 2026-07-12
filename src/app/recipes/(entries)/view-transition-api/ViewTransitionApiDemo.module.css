@@ -1,0 +1,112 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 0.75rem;
+}
+
+.card,
+.cardActive {
+  display: grid;
+  gap: 0.55rem;
+  min-block-size: 7rem;
+  padding: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #111d31);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font: inherit;
+  font-weight: 800;
+  text-align: start;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.card:hover {
+  background: light-dark(#eef4ff, #17243a);
+}
+
+.cardActive {
+  border-color: light-dark(#1e40af, #6b8ed8);
+  background: light-dark(#eef4ff, #1b3152);
+}
+
+.swatch,
+.previewSwatch {
+  background: var(--swatch-color);
+}
+
+.swatch {
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 8px;
+}
+
+.cardActive .swatch {
+  view-transition-name: chrome150-swatch;
+}
+
+.preview {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#f7faff, #101b2e);
+  view-transition-name: chrome150-panel;
+}
+
+.previewSwatch {
+  flex: none;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border-radius: 8px;
+  view-transition-name: chrome150-swatch;
+}
+
+.previewText {
+  min-width: 0;
+}
+
+.previewText h2,
+.previewText p {
+  margin: 0;
+}
+
+.previewText h2 {
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-size: 1.15rem;
+}
+
+.previewText p {
+  margin-block-start: 0.4rem;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  line-height: 1.7;
+}
+
+:global(::view-transition-old(chrome150-panel)),
+:global(::view-transition-new(chrome150-panel)) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--theme-transition-easing);
+}
+
+:global(::view-transition-old(chrome150-swatch)),
+:global(::view-transition-new(chrome150-swatch)) {
+  animation-duration: 320ms;
+  animation-timing-function: var(--theme-transition-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(::view-transition-old(chrome150-panel)),
+  :global(::view-transition-new(chrome150-panel)),
+  :global(::view-transition-old(chrome150-swatch)),
+  :global(::view-transition-new(chrome150-swatch)) {
+    animation: none;
+  }
+}

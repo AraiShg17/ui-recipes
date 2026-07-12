@@ -1,0 +1,106 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.lead,
+.note {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  line-height: 1.7;
+}
+
+.lead {
+  font-size: 0.95rem;
+}
+
+.note {
+  font-size: 0.82rem;
+  opacity: 0.72;
+}
+
+.demoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.panelTitle {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.fitStack {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.fitLine,
+.shrinkLine {
+  display: block;
+  inline-size: 100%;
+  margin: 0;
+  color: light-dark(#10214a, #e7efff);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.fitLine {
+  min-block-size: 3.75rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c7d4e8, #344867);
+  background: light-dark(#eef4ff, #14223a);
+  font-size: clamp(1.2rem, 10cqi, 2.8rem);
+  text-wrap: nowrap;
+}
+
+.ticket {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c7d4e8, #344867);
+  background: repeating-linear-gradient(
+      90deg,
+      light-dark(#dce8f8, #263a58) 0 1px,
+      transparent 1px 16px
+    ),
+    light-dark(#f7faff, #111d31);
+}
+
+.ticketLabel {
+  color: light-dark(#53627a, #a9bad7);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.shrinkLine {
+  font-size: clamp(1.4rem, 12cqi, 3.2rem);
+  white-space: nowrap;
+}
+
+@supports (text-fit: grow consistent) {
+  .fitLine {
+    font-size: 1.85rem;
+    text-fit: grow consistent 220%;
+  }
+
+  .shrinkLine {
+    font-size: 2.7rem;
+    text-fit: shrink consistent 46%;
+  }
+}

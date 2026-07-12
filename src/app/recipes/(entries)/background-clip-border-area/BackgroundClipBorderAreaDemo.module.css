@@ -1,0 +1,75 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.gradientBorder {
+  padding: 0.85rem;
+  border: 14px solid transparent;
+  border-radius: 8px;
+  background: conic-gradient(
+    from 160deg,
+    #5eead4,
+    #60a5fa,
+    #c084fc,
+    #f472b6,
+    #5eead4
+  );
+  background-clip: border-area;
+}
+
+.content {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem;
+  border-radius: 6px;
+  background: light-dark(#ffffff, #111d31);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.eyebrow {
+  color: light-dark(#2563eb, #93c5fd);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 1.2rem;
+}
+
+.body {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.dashedFrame {
+  display: grid;
+  place-items: safe center;
+  min-block-size: 96px;
+  padding: 1rem;
+  border: 10px dashed transparent;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #38bdf8, #a78bfa, #fb7185);
+  background-clip: border-area;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-weight: 700;
+  text-align: center;
+}
+
+@supports not (background-clip: border-area) {
+  .gradientBorder {
+    background:
+      linear-gradient(light-dark(#ffffff, #111d31), light-dark(#ffffff, #111d31))
+        padding-box,
+      conic-gradient(from 160deg, #5eead4, #60a5fa, #c084fc, #f472b6, #5eead4)
+        border-box;
+    background-clip: padding-box, border-box;
+  }
+
+  .dashedFrame {
+    border-color: light-dark(#60a5fa, #93c5fd);
+    background: light-dark(#eef4ff, #14223a);
+  }
+}

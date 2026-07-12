@@ -1,0 +1,71 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.panelTitle {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.toolbar,
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#f7faff, #111d31);
+}
+
+.toolButton,
+.tab,
+.tabActive {
+  min-block-size: 2.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 7px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #17243a);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+.toolButton:hover,
+.tab:hover {
+  background: light-dark(#eef4ff, #203452);
+}
+
+.toolButton:focus-visible,
+.tab:focus-visible,
+.tabActive:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.tabActive {
+  border-color: light-dark(#1e40af, #6b8ed8);
+  background: light-dark(#1e40af, #2c4d8e);
+  color: #ffffff;
+}
+
+.tabPanel {
+  min-block-size: 3.25rem;
+  margin: 0;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: light-dark(#eef4ff, #14223a);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  line-height: 1.6;
+}

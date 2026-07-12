@@ -30,7 +30,9 @@ export function AnchorPositioningDemo() {
           className={styles.menuTrigger}
           style={{ anchorName: "--menu-anchor" } as React.CSSProperties}
           aria-haspopup="menu"
+          aria-label="メニューを開く"
           popoverTarget="anchor-menu"
+          popoverTargetAction="toggle"
         >
           <MdMoreVert className={styles.menuTriggerIcon} aria-hidden />
         </button>

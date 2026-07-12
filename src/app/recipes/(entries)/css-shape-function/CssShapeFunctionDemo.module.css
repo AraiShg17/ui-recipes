@@ -1,0 +1,67 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.lead {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  line-height: 1.7;
+}
+
+.flagGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem;
+}
+
+.flag {
+  --wave-height: 24px;
+
+  display: grid;
+  place-items: safe center;
+  min-block-size: 150px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 20% 20%, color-mix(in oklab, #ffffff 28%, transparent), transparent 34%),
+    linear-gradient(135deg, #0ea5e9, #2563eb 52%, #7c3aed);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  clip-path: polygon(0 12%, 100% 0, 100% 88%, 0 100%);
+}
+
+.flagDeep {
+  --wave-height: 42px;
+  background:
+    radial-gradient(circle at 80% 18%, color-mix(in oklab, #ffffff 24%, transparent), transparent 32%),
+    linear-gradient(135deg, #14b8a6, #0f766e 52%, #115e59);
+}
+
+@supports (clip-path: shape(from 0 0, line to 100% 0, close)) {
+  .flag {
+    clip-path: shape(
+      from 0 var(--wave-height),
+      curve to 100% var(--wave-height) with 25% 0 / 75% calc(var(--wave-height) * 2),
+      vline to calc(100% - var(--wave-height)),
+      curve to 0 calc(100% - var(--wave-height)) with 75% 100% / 25% calc(100% - var(--wave-height) * 2),
+      close
+    );
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flag {
+    transition: clip-path 280ms var(--theme-transition-easing);
+  }
+
+  .flag:hover {
+    --wave-height: 36px;
+  }
+
+  .flagDeep:hover {
+    --wave-height: 54px;
+  }
+}

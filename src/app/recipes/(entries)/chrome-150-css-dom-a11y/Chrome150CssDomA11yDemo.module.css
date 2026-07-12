@@ -1,0 +1,149 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #111d31);
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.balanceRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-inline-size: 28rem;
+}
+
+.balanceRow span {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: light-dark(#e8f0ff, #20385c);
+  color: light-dark(#1d4ed8, #c7d2fe);
+  font-weight: 800;
+}
+
+.scroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 70%;
+  gap: 0.75rem;
+  overflow-x: auto;
+  overscroll-behavior: chain;
+  scroll-snap-type: x mandatory;
+  border-radius: 8px;
+}
+
+.scroller span {
+  display: grid;
+  place-items: safe center;
+  min-block-size: 5rem;
+  border-radius: 8px;
+  background: light-dark(#eef4ff, #14223a);
+  font-weight: 900;
+  scroll-snap-align: start;
+}
+
+.action {
+  justify-self: start;
+  min-block-size: 2.4rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #17243a);
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.status {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-size: 0.83rem;
+  opacity: 0.76;
+}
+
+.metricCard {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  inline-size: fit-content;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: light-dark(#eef4ff, #14223a);
+  font-weight: 800;
+  transition:
+    zoom 220ms var(--theme-transition-easing),
+    transform 220ms var(--theme-transition-easing);
+}
+
+.progress {
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  rotate: -90deg;
+}
+
+.progressTrack,
+.progressValue {
+  fill: none;
+  stroke-width: 10;
+}
+
+.progressTrack {
+  stroke: light-dark(#c8d5e8, #354866);
+}
+
+.progressValue {
+  stroke: light-dark(#2563eb, #93c5fd);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0.26;
+}
+
+@supports (flex-wrap: balance) {
+  .balanceRow {
+    flex-wrap: balance;
+  }
+}
+
+@supports (path-length: 1) {
+  .progressTrack,
+  .progressValue {
+    path-length: 1;
+  }
+}
+
+@supports (zoom: 1.1) {
+  .metricCard:hover {
+    zoom: 1.06;
+  }
+}
+
+@supports not (zoom: 1.1) {
+  .metricCard:hover {
+    transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metricCard {
+    transition: none;
+  }
+
+  .metricCard:hover {
+    transform: none;
+    zoom: 1;
+  }
+}

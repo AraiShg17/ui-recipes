@@ -1,0 +1,86 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.callout {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#eef4ff, #14223a);
+}
+
+.calloutText {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.calloutSubText {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.option,
+.rangeLabel {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  font-weight: 700;
+}
+
+.option input,
+.rangeLabel input {
+  accent-color: #2563eb;
+}
+
+.rangeLabel {
+  flex-wrap: wrap;
+}
+
+.rangeLabel input {
+  min-inline-size: min(100%, 220px);
+}
+
+.action {
+  justify-self: start;
+  min-block-size: 2.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.action:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@supports (color: AccentColor) {
+  .calloutText,
+  .action {
+    background: AccentColor;
+    color: AccentColorText;
+  }
+
+  .option input,
+  .rangeLabel input {
+    accent-color: AccentColor;
+  }
+
+  .action:focus-visible {
+    outline-color: AccentColor;
+  }
+}

@@ -1,0 +1,62 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.lead {
+  margin: 0;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  line-height: 1.7;
+}
+
+.shapeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.shapeItem {
+  display: grid;
+  place-items: safe center;
+  min-block-size: 150px;
+}
+
+.shape {
+  display: grid;
+  place-items: safe center;
+  inline-size: min(100%, 132px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 28% 22%, color-mix(in oklab, #ffffff 34%, transparent), transparent 32%),
+    linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  font-weight: 900;
+  text-transform: uppercase;
+  filter: drop-shadow(0 12px 24px color-mix(in oklab, #000000 18%, transparent));
+}
+
+.hex {
+  clip-path: polygon(50% 0, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+}
+
+.badge {
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.pointer {
+  clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%, 12% 50%);
+}
+
+@supports (clip-path: polygon(round 12px, 50% 0, 100% 100%, 0 100%)) {
+  .hex {
+    clip-path: polygon(round 18px, 50% 0, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+  }
+
+  .badge {
+    clip-path: polygon(round 14px, 10% 0, 100% 0, 90% 100%, 0 100%);
+  }
+
+  .pointer {
+    clip-path: polygon(round 16px, 0 0, 78% 0, 100% 50%, 78% 100%, 0 100%, 12% 50%);
+  }
+}

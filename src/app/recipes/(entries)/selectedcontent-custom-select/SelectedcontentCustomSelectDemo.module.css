@@ -1,0 +1,132 @@
+.wrap {
+  display: grid;
+  gap: 0.65rem;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+}
+
+.label {
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.select {
+  inline-size: min(100%, 320px);
+  border-radius: 8px;
+  border: 1px solid light-dark(#c8d5e8, #354866);
+  background: light-dark(#ffffff, #111d31);
+  color: inherit;
+  font: inherit;
+}
+
+.customButton {
+  inline-size: 100%;
+  min-block-size: 3.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+.selectedContent {
+  min-width: 0;
+}
+
+.chevron {
+  flex: none;
+  color: light-dark(#51617a, #a8bad8);
+}
+
+.option {
+  padding: 0.55rem 0.7rem;
+}
+
+.optionIcon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.8rem;
+  block-size: 1.8rem;
+  margin-inline-end: 0.55rem;
+  border-radius: 7px;
+  background: light-dark(#dbeafe, #1e3a5f);
+  color: light-dark(#1d4ed8, #93c5fd);
+  font-weight: 900;
+}
+
+.optionText {
+  display: inline-grid;
+  gap: 0.08rem;
+  vertical-align: middle;
+}
+
+.optionName {
+  font-weight: 800;
+}
+
+.optionMeta {
+  color: light-dark(#61708b, #a8bad8);
+  font-size: 0.78rem;
+}
+
+.note {
+  margin: 0;
+  max-inline-size: 34rem;
+  color: light-dark(var(--app-text-light), var(--app-text-dark));
+  font-size: 0.84rem;
+  line-height: 1.7;
+  opacity: 0.76;
+}
+
+@supports (appearance: base-select) {
+  .select,
+  .select::picker(select) {
+    appearance: base-select;
+  }
+
+  .select::picker(select) {
+    padding: 0.3rem;
+    border: 1px solid light-dark(#c8d5e8, #354866);
+    border-radius: 8px;
+    background: light-dark(#ffffff, #111d31);
+    box-shadow: 0 16px 32px color-mix(in oklab, #000000 18%, transparent);
+  }
+
+  .select::picker-icon {
+    display: none;
+  }
+
+  .option {
+    border-radius: 7px;
+  }
+
+  .option:checked {
+    background: light-dark(#e8f0ff, #20385c);
+  }
+
+  .option::checkmark {
+    color: light-dark(#1d4ed8, #93c5fd);
+    font-weight: 900;
+  }
+
+  .selectedContent .optionMeta {
+    display: none;
+  }
+}
+
+@supports not (appearance: base-select) {
+  .customButton,
+  .optionIcon,
+  .optionMeta {
+    display: none;
+  }
+
+  .select {
+    min-block-size: 2.75rem;
+    padding: 0.5rem;
+  }
+}
